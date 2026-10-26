@@ -1,0 +1,746 @@
+<!doctype html>
+<!--
+  Mycel Physarum Network: a free template by AnimatedWebs (https://animatedwebs.com/templates/mycel-physarum-network)
+  Copyright 2026 LIKE A KING INC. Free for personal and commercial websites, including client work.
+  Do not resell or redistribute it as a template. Full terms: templates/LICENSE.md in the MotionCraft Skills repo.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mycel · Routes that grow themselves</title>
+<meta name="description" content="Mycel is an adaptive logistics routing platform. Tens of thousands of virtual foragers find the shortest network between your hubs and re-grow it when anything breaks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root{
+  --bg:#05090a; --bg2:#0a1214; --ink:#e9f0ec; --mute:#a3b4ae; --line:rgba(233,240,236,.12);
+  --amber:#ffc83d; --teal:#3ee0c3; --glass:rgba(10,18,20,.55);
+  --display:'Bricolage Grotesque',system-ui,sans-serif; --body:'Instrument Sans',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--amber);color:#1a1200;padding:10px 16px;border-radius:8px;z-index:100;font-weight:600}
+.skip:focus{left:8px}
+.wrap{width:min(1240px,100% - 48px);margin-inline:auto}
+.mono{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--teal)}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.035em;line-height:.98}
+
+/* nav */
+nav.top{position:fixed;inset:0 0 auto 0;z-index:50;padding:18px 0;transition:background .4s,backdrop-filter .4s,border-color .4s;border-bottom:1px solid transparent}
+nav.top.solid{background:rgba(5,9,10,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-color:var(--line)}
+nav.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;min-height:44px;font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.04em;text-decoration:none}
+.logo svg{width:26px;height:26px}
+.links{display:flex;gap:30px;list-style:none}
+.links a{text-decoration:none;font-size:14.5px;color:var(--mute);transition:color .2s}
+.links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:var(--body);transition:transform .25s cubic-bezier(.16,1,.3,1),background .25s,border-color .25s}
+.btn:hover{transform:translateY(-2px)}
+.btn.pri{background:var(--amber);color:#1b1300}
+.btn.pri:hover{background:#ffd666}
+.btn.ghost{background:var(--glass);border-color:rgba(233,240,236,.22);color:var(--ink);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.btn.ghost:hover{border-color:var(--teal)}
+.btn.sm{padding:10px 18px;font-size:14px}
+.nav-end{display:flex;align-items:center;gap:10px}
+/* pause control: stops both simulations and every CSS loop */
+.pause{display:inline-grid;place-items:center;width:44px;height:44px;flex:none;border-radius:50%;border:1px solid rgba(233,240,236,.22);background:var(--glass);color:var(--ink);cursor:pointer;transition:border-color .25s}
+.pause:hover{border-color:var(--teal)}
+.pause svg{width:14px;height:14px;fill:currentColor}
+.pause .i-play,.pause[aria-pressed="true"] .i-pause{display:none}
+.pause[aria-pressed="true"] .i-play{display:block}
+.still *,.still *::before,.still *::after{animation-play-state:paused!important}
+
+/* hero */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;isolation:isolate}
+.hero canvas.sim{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:-2}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(ellipse 62% 80% at 16% 58%,rgba(5,9,10,.94),rgba(5,9,10,.6) 50%,rgba(5,9,10,0) 78%),
+  linear-gradient(to top,rgba(5,9,10,.95),rgba(5,9,10,0) 28%),linear-gradient(to bottom,rgba(5,9,10,.8),rgba(5,9,10,0) 16%)}
+.hero .copy{padding:150px 0 110px;max-width:640px}
+.hero h1{font-size:clamp(46px,7.4vw,112px);margin:22px 0 26px}
+.hero h1 em{font-style:normal;color:var(--amber)}
+.hero p.lead{font-size:clamp(17px,1.5vw,20px);color:#c4d2cc;max-width:520px;margin-bottom:34px}
+.hero .cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.hint{position:absolute;left:0;right:0;bottom:30px;z-index:2}
+.hint .wrap{display:flex;justify-content:space-between;gap:20px;color:var(--mute)}
+.hint b{color:var(--amber);font-weight:500}
+.nodelabel{text-shadow:0 0 8px #05090a,0 0 14px #05090a;position:absolute;z-index:1;pointer-events:none;transform:translate(14px,-50%);color:rgba(233,240,236,.75);white-space:nowrap}
+.nodelabel i{font-style:normal;color:var(--amber);margin-right:8px}
+
+/* sections */
+section{position:relative}
+.pad{padding:140px 0}
+.strip{border-block:1px solid var(--line);background:var(--bg2)}
+.strip .wrap{display:flex;flex-wrap:wrap;gap:22px 56px;justify-content:space-between;align-items:center;padding:34px 0}
+.strip span.nm{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.03em;color:#7f918b}
+.sechead{display:grid;grid-template-columns:1fr 1.2fr;gap:60px;align-items:end;margin-bottom:76px}
+.sechead h2{font-size:clamp(38px,5vw,72px);margin-top:20px}
+.sechead>p{color:var(--mute);max-width:520px;justify-self:end}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+.step{padding:40px 36px 44px 0;border-right:1px solid var(--line);position:relative}
+.step+.step{padding-left:36px}
+.step:last-child{border-right:0}
+.step .n{font-family:var(--mono);font-size:12px;color:var(--amber);letter-spacing:.18em}
+.step h3{font-size:34px;margin:56px 0 16px}
+.step p{color:var(--mute)}
+.step svg{width:100%;height:88px;margin-top:30px;opacity:.9}
+
+.stats{background:var(--bg2);border-block:1px solid var(--line)}
+.stats .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:84px 28px 84px 0}
+.stat+.stat{padding-left:28px;border-left:1px solid var(--line)}
+.stat .v{font-family:var(--display);font-weight:600;font-size:clamp(44px,5.4vw,84px);letter-spacing:-.05em;line-height:1;color:var(--ink)}
+.stat .v small{font-size:.45em;color:var(--amber);margin-left:4px;letter-spacing:-.02em}
+.stat p{margin-top:16px;color:var(--mute);font-size:15px;max-width:230px}
+
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:22px;padding:34px 30px 38px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:border-color .3s,transform .4s cubic-bezier(.16,1,.3,1)}
+.card:hover{border-color:rgba(62,224,195,.5);transform:translateY(-4px)}
+.card .ic{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;margin-bottom:60px;color:var(--teal)}
+.card h3{font-size:25px;margin-bottom:12px;letter-spacing:-.03em}
+.card p{color:var(--mute);font-size:15.5px}
+
+.quote{padding:150px 0;text-align:left}
+.quote blockquote{font-family:var(--display);font-weight:500;font-size:clamp(30px,4.2vw,62px);line-height:1.08;letter-spacing:-.035em;max-width:1000px}
+.quote blockquote em{font-style:normal;color:var(--amber)}
+.quote cite{display:block;margin-top:38px;font-style:normal;color:var(--mute);font-size:15px}
+.quote cite b{color:var(--ink);font-weight:600}
+
+.final{position:relative;overflow:hidden;isolation:isolate;padding:170px 0 150px;border-top:1px solid var(--line)}
+.final canvas.sim{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block}
+.final::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 55% 60% at 50% 50%,rgba(5,9,10,.9),rgba(5,9,10,.25) 80%)}
+.final .in{text-align:center;max-width:780px;margin:auto}
+.final h2{font-size:clamp(42px,6.6vw,96px);margin:24px 0}
+.final p{color:#c4d2cc;margin-bottom:38px}
+form.pilot{display:flex;gap:10px;max-width:520px;margin:0 auto;padding:7px;border-radius:999px;background:var(--glass);border:1px solid rgba(233,240,236,.2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+form.pilot input{flex:1;min-width:0;background:transparent;border:0;color:var(--ink);font:inherit;padding:0 18px;font-size:16px}
+form.pilot input::placeholder{color:#8fa19b}
+form.pilot input:focus-visible{outline:none}
+form.pilot:focus-within{border-color:var(--amber)}
+.thanks{margin-top:18px;min-height:26px;color:var(--teal);font-family:var(--mono);font-size:12px;letter-spacing:.1em}
+
+footer{border-top:1px solid var(--line);padding:56px 0 46px;color:var(--mute);font-size:14px}
+footer .wrap{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:40px}
+footer h4{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin-bottom:16px;font-weight:500}
+footer ul{list-style:none;display:grid;gap:9px}
+footer a{text-decoration:none}
+footer a:hover{color:var(--amber)}
+footer .fine{grid-column:1/-1;border-top:1px solid var(--line);padding-top:26px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13px}
+
+/* reveals */
+.js .rv{opacity:0;transform:translateY(34px);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1);transition-delay:var(--d,0s)}
+.js .rv.in{opacity:1;transform:none}
+
+@media (max-width:900px){
+  .links{display:none}
+  .sechead{grid-template-columns:1fr;gap:24px;margin-bottom:48px}
+  .sechead>p{justify-self:start}
+  .steps{grid-template-columns:1fr}
+  .step,.step+.step{padding:36px 0;border-right:0;border-bottom:1px solid var(--line)}
+  .step h3{margin-top:28px}
+  .stats .grid{grid-template-columns:1fr 1fr}
+  .stat,.stat+.stat{padding:48px 18px 48px 0;border-left:0}
+  .stat:nth-child(even){padding-left:18px;border-left:1px solid var(--line)}
+  .feat{grid-template-columns:1fr}
+  .card .ic{margin-bottom:34px}
+  .pad{padding:96px 0}
+  footer .wrap{grid-template-columns:1fr 1fr}
+  footer ul{gap:0}
+  footer ul a{display:inline-flex;align-items:center;min-height:44px;min-width:44px}
+  .hero .copy{padding:120px 0 120px}
+  .hero{align-items:flex-start}
+  .hero::after{background:linear-gradient(to bottom,rgba(5,9,10,.92),rgba(5,9,10,.55) 44%,rgba(5,9,10,0) 62%)}
+  .hint .wrap{flex-direction:column;gap:4px}
+  .nodelabel.lg{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js .rv{opacity:1;transform:none;transition:none}
+  .btn,.card{transition:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="top" id="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Mycel home">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="3.2" fill="#ffc83d"/><path d="M16 16 8 7M16 16l9-5M16 16l-10 7M16 16l8 9M16 16V3" stroke="#3ee0c3" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="7" r="2" fill="#3ee0c3"/><circle cx="25" cy="11" r="2" fill="#3ee0c3"/><circle cx="6" cy="23" r="2" fill="#3ee0c3"/><circle cx="24" cy="25" r="2" fill="#3ee0c3"/><circle cx="16" cy="3" r="2" fill="#3ee0c3"/></svg>
+      Mycel
+    </a>
+    <ul class="links">
+      <li><a href="#method">Method</a></li>
+      <li><a href="#proof">Proof</a></li>
+      <li><a href="#platform">Platform</a></li>
+      <li><a href="#pilot">Pilot</a></li>
+    </ul>
+    <div class="nav-end">
+      <button class="pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion" title="Pause motion">
+        <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg>
+        <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l8 5-8 5z"/></svg>
+      </button>
+      <a class="btn pri sm" href="#pilot">Book a pilot</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+<header class="hero" id="top">
+  <canvas class="sim" id="heroSim" aria-hidden="true"></canvas>
+  <div id="labels" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="copy">
+      <p class="eyebrow rv">Adaptive logistics routing</p>
+      <h1 class="rv" style="--d:.08s">Let your network find its <em>own</em> shortest path.</h1>
+      <p class="lead rv" style="--d:.16s">Mycel releases tens of thousands of virtual foragers across your lanes, hubs and constraints, then keeps only the routes that survive. A living network that re-grows the moment a bridge closes.</p>
+      <div class="cta rv" style="--d:.24s">
+        <a class="btn pri" href="#pilot">Book a pilot</a>
+        <a class="btn ghost" href="#method">See how it grows</a>
+      </div>
+    </div>
+  </div>
+  <div class="hint" aria-hidden="true">
+    <div class="wrap mono">
+      <span>Move to place food. Click to anchor a hub.</span>
+      <span><b id="agentCount">40,000</b> foragers &middot; step <span id="stepCount">0</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="strip" id="proof">
+  <div class="wrap">
+    <span class="mono" style="color:#6f827c">Routing for</span>
+    <span class="nm">Bellwether Freight</span>
+    <span class="nm">Tarn Valley Co-op</span>
+    <span class="nm">Quillon Marine</span>
+    <span class="nm">Ardent Cold Chain</span>
+    <span class="nm">Sable Rail</span>
+  </div>
+</div>
+
+<section class="pad" id="method">
+  <div class="wrap">
+    <div class="sechead">
+      <div><p class="eyebrow rv">The method</p><h2 class="rv" style="--d:.06s">Borrowed from a slime mold.</h2></div>
+      <p class="rv" style="--d:.12s">Physarum polycephalum can solve a maze and rebuild a rail map of a country. Mycel turns that behavior into a routing engine that explores, reinforces and prunes in continuous time.</p>
+    </div>
+    <div class="steps">
+      <article class="step rv">
+        <span class="n">01 / SEED</span>
+        <h3>Drop the hubs</h3>
+        <p>Warehouses, ports and depots become glowing food sources. Capacity, windows and cost are encoded as how brightly each one calls.</p>
+        <svg viewBox="0 0 300 88" fill="none" aria-hidden="true"><circle cx="30" cy="44" r="6" fill="#ffc83d"/><circle cx="150" cy="20" r="6" fill="#ffc83d"/><circle cx="270" cy="60" r="6" fill="#ffc83d"/><g fill="#3ee0c3" opacity=".55"><circle cx="70" cy="30" r="1.6"/><circle cx="96" cy="58" r="1.6"/><circle cx="200" cy="40" r="1.6"/><circle cx="120" cy="70" r="1.6"/><circle cx="230" cy="22" r="1.6"/><circle cx="60" cy="68" r="1.6"/><circle cx="180" cy="72" r="1.6"/></g></svg>
+      </article>
+      <article class="step rv" style="--d:.1s">
+        <span class="n">02 / FORAGE</span>
+        <h3>Release the swarm</h3>
+        <p>Forty thousand agents wander, sense the trail ahead and lay more of it. Good paths are walked more, so they get stronger.</p>
+        <svg viewBox="0 0 300 88" fill="none" aria-hidden="true"><path d="M30 44C70 20 110 70 150 20M150 20C200 50 240 40 270 60M30 44C80 80 140 60 200 56" stroke="#3ee0c3" stroke-width="1" opacity=".5"/><path d="M30 44C60 30 100 50 150 20" stroke="#3ee0c3" stroke-width="2.4" opacity=".8"/><circle cx="30" cy="44" r="6" fill="#ffc83d"/><circle cx="150" cy="20" r="6" fill="#ffc83d"/><circle cx="270" cy="60" r="6" fill="#ffc83d"/></svg>
+      </article>
+      <article class="step rv" style="--d:.2s">
+        <span class="n">03 / PRUNE</span>
+        <h3>Keep what survives</h3>
+        <p>Unused trail evaporates. What remains is a lean network with sensible redundancy, ready to be exported as lanes, loads and ETAs.</p>
+        <svg viewBox="0 0 300 88" fill="none" aria-hidden="true"><path d="M30 44C70 30 110 24 150 20C200 34 240 46 270 60" stroke="#ffc83d" stroke-width="3" stroke-linecap="round"/><circle cx="30" cy="44" r="6" fill="#ffc83d"/><circle cx="150" cy="20" r="6" fill="#ffc83d"/><circle cx="270" cy="60" r="6" fill="#ffc83d"/></svg>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="stats" aria-label="Results">
+  <div class="wrap grid">
+    <div class="stat rv"><div class="v"><span data-count="31">0</span><small>%</small></div><p>fewer empty miles across pilot corridors in the first quarter.</p></div>
+    <div class="stat rv" style="--d:.08s"><div class="v"><span data-count="4.2" data-dec="1">0</span><small>s</small></div><p>to regrow the network after a closed bridge or a stuck port.</p></div>
+    <div class="stat rv" style="--d:.16s"><div class="v"><span data-count="9.8" data-dec="1">0</span><small>M</small></div><p>lane-segments simulated every single day on a modest cluster.</p></div>
+    <div class="stat rv" style="--d:.24s"><div class="v"><span data-count="0">0</span><small>clicks</small></div><p>of manual rebalancing needed once a network is seeded.</p></div>
+  </div>
+</section>
+
+<section class="pad" id="platform">
+  <div class="wrap">
+    <div class="sechead">
+      <div><p class="eyebrow rv">The platform</p><h2 class="rv" style="--d:.06s">Everything a dispatcher would ask for.</h2></div>
+      <p class="rv" style="--d:.12s">The swarm is the engine. Around it sits the tooling a real operations room needs: constraints, explanations, carbon accounting and an API that stays out of the way.</p>
+    </div>
+    <div class="feat">
+      <article class="card rv"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 12h5l3-7 3 14 3-7h2"/></svg></div><h3>Disruption healing</h3><p>Close a road, flood a depot or slash a ferry timetable. The network rebuilds around it in seconds, not in the next planning cycle.</p></article>
+      <article class="card rv" style="--d:.08s"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M12 8v8"/></svg></div><h3>Constraint aware</h3><p>Driver hours, cold-chain windows, axle limits and customs hold times shape the field instead of being bolted on afterwards.</p></article>
+      <article class="card rv" style="--d:.16s"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 19c8 0 14-6 14-14C11 5 5 11 5 19z"/><path d="M5 19 13 11"/></svg></div><h3>Carbon ledger</h3><p>Every grown path carries a per-ton emissions figure, so greener alternatives show up as a bright second route, not a report.</p></article>
+      <article class="card rv"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div><h3>Explainable paths</h3><p>Scrub back through the growth and see exactly why a lane was kept, how often it was walked and what would have replaced it.</p></article>
+      <article class="card rv" style="--d:.08s"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 8 4 12l4 4M16 8l4 4-4 4M13.5 5l-3 14"/></svg></div><h3>Boringly good API</h3><p>REST and streaming endpoints, typed clients and webhooks. Push in hubs and demand, pull out lanes, loads and ETAs.</p></article>
+      <article class="card rv" style="--d:.16s"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 17 9 11l4 4 8-9"/><path d="M15 6h6v6"/></svg></div><h3>Digital twin</h3><p>Fork the live network, test a new depot or a fuel surcharge on a sandbox swarm, and compare the regrown map side by side.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="quote" aria-label="Customer quote">
+  <div class="wrap">
+    <blockquote class="rv">&ldquo;We stopped drawing routes. Now we <em>place hubs</em>, watch the network grow, and argue about what to build next.&rdquo;</blockquote>
+    <cite class="rv" style="--d:.1s"><b>Irene Vance</b> &middot; Head of Network Design, Tarn Valley Co-op</cite>
+  </div>
+</section>
+
+<section class="final" id="pilot">
+  <canvas class="sim" id="ctaSim" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="in">
+      <p class="eyebrow rv" style="justify-content:center">Ninety day pilot</p>
+      <h2 class="rv" style="--d:.06s">Plant your first network.</h2>
+      <p class="rv" style="--d:.12s">Send us one corridor and a month of lane data. We will grow it, benchmark it against your current plan and show you the difference.</p>
+      <form class="pilot rv" id="pilotForm" style="--d:.18s" novalidate>
+        <label for="email" style="position:absolute;left:-999px">Work email</label>
+        <input id="email" type="email" placeholder="you@yourfreight.example" autocomplete="off" required>
+        <button class="btn pri" type="submit">Request pilot</button>
+      </form>
+      <p class="thanks" id="thanks" role="status"></p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><a class="logo" href="#top" style="margin-bottom:16px">Mycel</a><p style="max-width:300px">Adaptive routing for freight, cold chain and last-mile networks.</p></div>
+    <div><h4>Product</h4><ul><li><a href="#method">Method</a></li><li><a href="#platform">Platform</a></li><li><a href="#pilot">Pilot</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="#top">About</a></li><li><a href="#top">Careers</a></li><li><a href="#top">Press kit</a></li></ul></div>
+    <div><h4>Resources</h4><ul><li><a href="#top">Documentation</a></li><li><a href="#top">Status</a></li><li><a href="#top">Security</a></li></ul></div>
+    <div class="fine"><span>&copy; 2026 Mycel Systems. A fictional company for demonstration. Template by <a href="https://animatedwebs.com">AnimatedWebs</a>.</span><span class="mono">Grown, not planned</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- pause control: one flag every moving part reads ---------- */
+/* Starts pressed when the OS asks for reduced motion, so a visitor can still opt in. */
+var paused = reduce, onPause = [], pauseBtn = document.getElementById('pause');
+function setPaused(p){
+  paused = p;
+  pauseBtn.setAttribute('aria-pressed', String(p));
+  document.documentElement.classList.toggle('still', p);
+  onPause.forEach(function(fn){ fn(p); });
+}
+pauseBtn.addEventListener('click', function(){ setPaused(!paused); });
+setPaused(paused);
+
+var isMobile = function(){return innerWidth < 768};
+
+/* ---------- Physarum simulation (Canvas 2D, typed arrays) ---------- */
+function Physarum(canvas, opt){
+  var self = this;
+  this.canvas = canvas; this.ctx = canvas.getContext('2d');
+  this.opt = opt; this.visible = true;
+  this.nodes = []; this.user = []; this.food = null; this.lastMove = -1e9;
+  this.stepNo = 0; this.t = 0;
+  this.bloom = document.createElement('canvas');
+  this.small = document.createElement('canvas');
+  this.build();
+}
+Physarum.prototype.build = function(){
+  var o = this.opt, c = this.canvas, mob = isMobile();
+  var dpr = Math.min(window.devicePixelRatio || 1, mob ? 1.5 : 2);
+  var cw = c.clientWidth || 800, ch = c.clientHeight || 500;
+  c.width = Math.round(cw * dpr); c.height = Math.round(ch * dpr);
+  this.cw = cw; this.ch = ch; this.dpr = dpr;
+  var cell = mob ? 4 : (o.cell || 3);
+  this.W = Math.max(60, Math.round(cw / cell)); this.H = Math.max(40, Math.round(ch / cell));
+  this.sx = this.W / cw; this.sy = this.H / ch;
+  var N = mob ? o.mobAgents : o.agents;
+  this.N = N;
+  this.ax = new Float32Array(N); this.ay = new Float32Array(N); this.aa = new Float32Array(N);
+  this.A = new Float32Array(this.W * this.H); this.B = new Float32Array(this.W * this.H); this.S = new Float32Array(this.W * this.H);
+  this.small.width = this.W; this.small.height = this.H;
+  this.sctx = this.small.getContext('2d');
+  this.img = this.sctx.createImageData(this.W, this.H);
+  this.bloom.width = Math.max(16, this.W >> 2); this.bloom.height = Math.max(12, this.H >> 2);
+  this.bctx = this.bloom.getContext('2d');
+  var lay = mob ? o.nodesMobile : o.nodes;
+  this.nodes = lay.map(function(p){return {x:p[0], y:p[1], r:p[2] || 1, ph:Math.random()*6.28}});
+  var W = this.W, H = this.H, i, nd;
+  for(i = 0; i < N; i++){
+    if(i % 2 === 0 || !this.nodes.length){ this.ax[i] = Math.random() * W; this.ay[i] = Math.random() * H; }
+    else { nd = this.nodes[(Math.random() * this.nodes.length) | 0];
+      var ang = Math.random() * 6.283, rr = Math.pow(Math.random(), .6) * 26;
+      this.ax[i] = Math.min(W - 2, Math.max(1, nd.x * W + Math.cos(ang) * rr)); this.ay[i] = Math.min(H - 2, Math.max(1, nd.y * H + Math.sin(ang) * rr)); }
+    this.aa[i] = Math.random() * 6.283;
+  }
+  // broad static attractant around hubs so agents connect them
+  var S = this.S, gx, gy, k2, q, sg2 = 2 * 16 * 16;
+  for(k2 = 0; k2 < this.nodes.length; k2++){ var nn = this.nodes[k2], ncx = nn.x * this.W, ncy = nn.y * this.H;
+    for(gy = 0; gy < this.H; gy++) for(gx = 0; gx < this.W; gx++){ q = (gx - ncx) * (gx - ncx) + (gy - ncy) * (gy - ncy); if(q < 4900) S[gy * this.W + gx] += 0.9 * Math.exp(-q / sg2); } }
+  // color LUT
+  var stops = [[0,[5,9,10]],[.12,[7,28,30]],[.32,[14,86,82]],[.52,[40,190,165]],[.7,[255,196,56]],[1,[255,244,208]]];
+  this.lut = new Uint8ClampedArray(256 * 3);
+  for(i = 0; i < 256; i++){ var t = i / 255, k = 0; while(k < stops.length - 2 && t > stops[k + 1][0]) k++;
+    var a = stops[k], b = stops[k + 1], f = Math.min(1, Math.max(0, (t - a[0]) / (b[0] - a[0]))); f = f * f * (3 - 2 * f);
+    for(var j = 0; j < 3; j++) this.lut[i * 3 + j] = a[1][j] + (b[1][j] - a[1][j]) * f; }
+  this.stepNo = 0;
+};
+Physarum.prototype.step = function(){
+  var W = this.W, H = this.H, A = this.A, B = this.B, S = this.S, N = this.N, ax = this.ax, ay = this.ay, aa = this.aa;
+  var SD = 8, SA = 0.55, RT = 0.45, SS = 1.0, DEP = 0.1;
+  var cSA = Math.cos(SA), sSA = Math.sin(SA), TAU = 6.2831853, rnd = Math.random;
+  var maxX = W - 1.001, maxY = H - 1.001, i, c, s, x, y, a, f, l, r, ix, iy;
+  for(i = 0; i < N; i++){
+    x = ax[i]; y = ay[i]; a = aa[i]; c = Math.cos(a); s = Math.sin(a);
+    ix = (x + SD * c) | 0; iy = (y + SD * s) | 0; ix = ix < 0 ? 0 : ix > maxX ? maxX | 0 : ix; iy = iy < 0 ? 0 : iy > maxY ? maxY | 0 : iy; f = A[iy * W + ix] + S[iy * W + ix];
+    ix = (x + SD * (c * cSA - s * sSA)) | 0; iy = (y + SD * (s * cSA + c * sSA)) | 0; ix = ix < 0 ? 0 : ix > maxX ? maxX | 0 : ix; iy = iy < 0 ? 0 : iy > maxY ? maxY | 0 : iy; l = A[iy * W + ix] + S[iy * W + ix];
+    ix = (x + SD * (c * cSA + s * sSA)) | 0; iy = (y + SD * (s * cSA - c * sSA)) | 0; ix = ix < 0 ? 0 : ix > maxX ? maxX | 0 : ix; iy = iy < 0 ? 0 : iy > maxY ? maxY | 0 : iy; r = A[iy * W + ix] + S[iy * W + ix];
+    if(f > l && f > r){}
+    else if(f < l && f < r) a += (rnd() < .5 ? -RT : RT);
+    else if(l > r) a += RT * (.4 + rnd() * .6);
+    else if(r > l) a -= RT * (.4 + rnd() * .6);
+    a += (rnd() - .5) * .14;
+    c = Math.cos(a); s = Math.sin(a);
+    x += c * SS; y += s * SS;
+    if(x < 1 || x > maxX || y < 1 || y > maxY){ x = x < 1 ? 1 : x > maxX ? maxX : x; y = y < 1 ? 1 : y > maxY ? maxY : y; a = rnd() * TAU; }
+    ax[i] = x; ay[i] = y; aa[i] = a;
+    A[((y | 0) * W + (x | 0))] += DEP;
+  }
+  // food sources
+  var k, nd, px, py, cx, cy, dd, rr;
+  var src = this.nodes.concat(this.user);
+  for(k = 0; k < src.length; k++){ nd = src[k]; px = (nd.x * W) | 0; py = (nd.y * H) | 0; rr = nd.r > 1.2 ? 3 : 2;
+    for(cy = -rr; cy <= rr; cy++) for(cx = -rr; cx <= rr; cx++){ if(cx * cx + cy * cy > rr * rr) continue; ix = px + cx; iy = py + cy; if(ix > 0 && iy > 0 && ix < W - 1 && iy < H - 1) A[iy * W + ix] = Math.min(4, A[iy * W + ix] + 0.9); } }
+  if(this.food){ px = (this.food.x * this.sx) | 0; py = (this.food.y * this.sy) | 0;
+    for(cy = -3; cy <= 3; cy++) for(cx = -3; cx <= 3; cx++){ if(cx * cx + cy * cy > 9) continue; ix = px + cx; iy = py + cy; if(ix > 0 && iy > 0 && ix < W - 1 && iy < H - 1) A[iy * W + ix] = Math.min(4, A[iy * W + ix] + 1.1); } }
+  // diffuse (separable 3-tap) + decay
+  var row, idx, v;
+  for(row = 0; row < H; row++){ idx = row * W; B[idx] = A[idx]; B[idx + W - 1] = A[idx + W - 1];
+    for(i = 1; i < W - 1; i++) B[idx + i] = (A[idx + i - 1] + A[idx + i] + A[idx + i + 1]) * .3333333; }
+  var DEC = 0.925, MIX = 0.3;
+  for(row = 1; row < H - 1; row++){ idx = row * W;
+    for(i = 1; i < W - 1; i++){ v = (B[idx - W + i] + B[idx + i] + B[idx + W + i]) * .3333333; A[idx + i] = (A[idx + i] + (v - A[idx + i]) * MIX) * DEC; } }
+  this.stepNo++;
+};
+Physarum.prototype.draw = function(time){
+  var W = this.W, H = this.H, A = this.A, d = this.img.data, lut = this.lut, n = W * H, i, v, p = 0;
+  for(i = 0; i < n; i++){ v = A[i] * 0.3; v = v > 1 ? 1 : v; v = Math.sqrt(v); var li = ((v * 255) | 0) * 3; d[p++] = lut[li]; d[p++] = lut[li + 1]; d[p++] = lut[li + 2]; d[p++] = 255; }
+  this.sctx.putImageData(this.img, 0, 0);
+  var ctx = this.ctx, cw = this.canvas.width, ch = this.canvas.height;
+  ctx.globalCompositeOperation = 'source-over'; ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(this.small, 0, 0, cw, ch);
+  this.bctx.drawImage(this.small, 0, 0, this.bloom.width, this.bloom.height);
+  ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .75; ctx.drawImage(this.bloom, 0, 0, cw, ch); ctx.globalAlpha = 1;
+  // nodes
+  var dpr = this.dpr, pulse = reduce ? 0 : 1, src = this.nodes.concat(this.user), k, nd, x, y, g, rad;
+  for(k = 0; k < src.length; k++){ nd = src[k]; x = nd.x * this.cw * dpr; y = nd.y * this.ch * dpr;
+    var pu = .5 + .5 * Math.sin(time * 1.6 + nd.ph) * pulse; rad = (nd.r > 1.2 ? 78 : 60) * dpr * (1 + .12 * pu);
+    g = ctx.createRadialGradient(x, y, 0, x, y, rad); g.addColorStop(0, 'rgba(255,240,200,.95)'); g.addColorStop(.2, 'rgba(255,200,61,.45)'); g.addColorStop(1, 'rgba(255,200,61,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, rad, 0, 6.2832); ctx.fill();
+    ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#fff6da'; ctx.beginPath(); ctx.arc(x, y, 4.2 * dpr, 0, 6.2832); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,214,102,' + (.55 - .35 * pu) + ')'; ctx.lineWidth = 1.2 * dpr; ctx.beginPath(); ctx.arc(x, y, (9 + 10 * pu) * dpr, 0, 6.2832); ctx.stroke();
+    ctx.globalCompositeOperation = 'lighter'; }
+  if(this.food){ x = this.food.x * dpr; y = this.food.y * dpr; g = ctx.createRadialGradient(x, y, 0, x, y, 46 * dpr); g.addColorStop(0, 'rgba(120,255,230,.55)'); g.addColorStop(1, 'rgba(62,224,195,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 46 * dpr, 0, 6.2832); ctx.fill(); }
+  ctx.globalCompositeOperation = 'source-over';
+};
+Physarum.prototype.prewarm = function(n){ for(var i = 0; i < n; i++) this.step(); };
+
+/* ---------- GPU Physarum (WebGL2): agents live in a float texture, trails in a half-float texture ---------- */
+var GLSL_VS_FULL = `#version 300 es
+in vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
+var GLSL_UPDATE = `#version 300 es
+precision highp float;
+uniform sampler2D uAg, uTr, uFld; uniform vec2 uSize; uniform float uTime, uSD, uSA, uRT, uSS;
+out vec4 o;
+float hash(vec2 p){ p = fract(p * vec2(443.897, 441.423)); p += dot(p, p.yx + 19.19); return fract((p.x + p.y) * p.x); }
+float sense(vec2 p, float a){ vec2 q = clamp(p + uSD * vec2(cos(a), sin(a)), vec2(1.), uSize - 1.) / uSize; return texture(uTr, q).r + texture(uFld, q).r; }
+void main(){
+  vec4 ag = texelFetch(uAg, ivec2(gl_FragCoord.xy), 0);
+  vec2 p = ag.xy; float a = ag.z;
+  float f = sense(p, a), l = sense(p, a + uSA), r = sense(p, a - uSA);
+  float r1 = hash(gl_FragCoord.xy + uTime), r2 = hash(gl_FragCoord.yx * 1.713 + uTime * 1.31);
+  if(f > l && f > r){ }
+  else if(f < l && f < r){ a += (r1 < .5 ? -uRT : uRT); }
+  else if(l > r){ a += uRT * (.4 + .6 * r2); }
+  else if(r > l){ a -= uRT * (.4 + .6 * r2); }
+  a += (r2 - .5) * .14;
+  p += uSS * vec2(cos(a), sin(a));
+  if(p.x < 1. || p.y < 1. || p.x > uSize.x - 1. || p.y > uSize.y - 1.){ p = clamp(p, vec2(1.), uSize - 1.); a = r1 * 6.2832; }
+  o = vec4(p, a, 0.);
+}`;
+var GLSL_DEP_VS = `#version 300 es
+uniform sampler2D uAg; uniform vec2 uSize; uniform int uAS;
+void main(){ int i = gl_VertexID; vec4 a = texelFetch(uAg, ivec2(i % uAS, i / uAS), 0);
+  gl_Position = vec4(a.xy / uSize * 2. - 1., 0., 1.); gl_PointSize = 1.; }`;
+var GLSL_DEP_FS = `#version 300 es
+precision highp float; uniform float uDep; out vec4 o; void main(){ o = vec4(uDep, 0., 0., 1.); }`;
+var GLSL_DIFFUSE = `#version 300 es
+precision highp float;
+uniform sampler2D uTr; uniform vec2 uSize; uniform vec4 uNode[16]; uniform int uNN; uniform vec3 uFood; uniform float uDec, uMix;
+out vec4 o;
+void main(){
+  vec2 px = gl_FragCoord.xy, uv = px / uSize, e = 1. / uSize; float c = texture(uTr, uv).r, s = 0.;
+  for(int y = -1; y <= 1; y++) for(int x = -1; x <= 1; x++) s += texture(uTr, uv + vec2(float(x), float(y)) * e).r;
+  float v = mix(c, s / 9., uMix) * uDec;
+  for(int i = 0; i < 16; i++){ if(i >= uNN) break; vec2 d = px - uNode[i].xy; v += uNode[i].z * exp(-dot(d, d) / 3.2); }
+  if(uFood.z > 0.){ vec2 d = px - uFood.xy; v += uFood.z * exp(-dot(d, d) / 5.); }
+  o = vec4(min(v, 4.), 0., 0., 1.);
+}`;
+var GLSL_DISPLAY = `#version 300 es
+precision highp float;
+uniform sampler2D uTr; uniform vec2 uRes, uTrSize; uniform float uTime, uGain; uniform vec4 uNS[16]; uniform int uNN; uniform vec3 uFS; uniform vec2 uLight;
+out vec4 o;
+float T(vec2 uv){ return texture(uTr, uv).r; }
+float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+vec3 ramp(float t){
+  vec3 c0 = vec3(.012, .03, .036), c1 = vec3(.02, .10, .11), c2 = vec3(.04, .30, .29), c3 = vec3(.10, .70, .60), c4 = vec3(1., .74, .20), c5 = vec3(1., .95, .80);
+  if(t < .15) return mix(c0, c1, t / .15);
+  if(t < .4) return mix(c1, c2, (t - .15) / .25);
+  if(t < .62) return mix(c2, c3, (t - .4) / .22);
+  if(t < .82) return mix(c3, c4, (t - .62) / .2);
+  return mix(c4, c5, (t - .82) / .18);
+}
+void main(){
+  vec2 uv = vec2(gl_FragCoord.x / uRes.x, 1. - gl_FragCoord.y / uRes.y);
+  vec2 e = 1.4 / uTrSize;
+  float d = T(uv), dv = sqrt(clamp(d * uGain, 0., 1.));
+  vec2 g = vec2(T(uv + vec2(e.x, 0.)) - T(uv - vec2(e.x, 0.)), T(uv + vec2(0., e.y)) - T(uv - vec2(0., e.y)));
+  vec3 n = normalize(vec3(-g * uGain * 2.6, 1.));
+  vec3 L = normalize(vec3((uLight - uv) * vec2(uRes.x / uRes.y, -1.), .7));
+  float spec = pow(max(dot(n, normalize(L + vec3(0., 0., 1.))), 0.), 34.) * smoothstep(.04, .45, dv);
+  vec3 col = ramp(dv) * (.78 + .42 * dot(n, L));
+  col += vec3(1., .92, .72) * spec * .6;
+  float b = 0.;
+  for(int i = 0; i < 8; i++){ float a = float(i) * .7854; vec2 off = vec2(cos(a), sin(a)); b += T(uv + off * 7. / uTrSize) + T(uv + off * 18. / uTrSize) * .8; }
+  b = sqrt(clamp(b / 14.4 * uGain, 0., 1.));
+  col += vec3(.10, .55, .48) * b * .55 * (1. - dv * .6);
+  // hubs
+  for(int i = 0; i < 16; i++){ if(i >= uNN) break;
+    vec2 dd = gl_FragCoord.xy - uNS[i].xy; float r = length(dd), R = uNS[i].z, pu = .5 + .5 * sin(uTime * 1.6 + uNS[i].w);
+    col += vec3(1., .72, .2) * exp(-pow(r / (R * (1.6 + .25 * pu)), 2.)) * .55;
+    col += vec3(1., .96, .82) * smoothstep(R * .22, R * .08, r);
+    col += vec3(1., .8, .35) * exp(-pow((r - R * (.5 + .45 * pu)) / (R * .05 + 1.), 2.)) * (.55 - .35 * pu); }
+  if(uFS.z > 0.){ float r = length(gl_FragCoord.xy - uFS.xy); col += vec3(.2, 1., .85) * exp(-pow(r / 44., 2.)) * .45; }
+  col = 1. - exp(-col * 1.25);
+  col *= 1. - .45 * smoothstep(.5, 1.2, length((uv - .5) * vec2(1.2, 1.)));
+  col += (h21(gl_FragCoord.xy + uTime) - .5) * .025;
+  o = vec4(col, 1.);
+}`;
+
+function GPUPhysarum(canvas, opt){
+  this.canvas = canvas; this.opt = opt; this.nodes = []; this.user = []; this.food = null; this.lastMove = -1e9; this.stepNo = 0; this.light = {x:.3, y:.25};
+  var gl = this.gl = canvas.getContext('webgl2', {antialias:false, alpha:false, powerPreference:'high-performance'});
+  if(!gl || !gl.getExtension('EXT_color_buffer_float')) throw new Error('no float render targets');
+  var dbg = gl.getExtension('WEBGL_debug_renderer_info'); this.soft = dbg && /swiftshader|llvmpipe|software/i.test(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '');
+  var self = this;
+  function sh(t, src){ var s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
+  function prog(vs, fs, names){ var p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p);
+    if(!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); var u = {}; names.forEach(function(n){ u[n] = gl.getUniformLocation(p, n); }); return {p:p, u:u}; }
+  this.pUpd = prog(GLSL_VS_FULL, GLSL_UPDATE, ['uAg','uTr','uFld','uSize','uTime','uSD','uSA','uRT','uSS']);
+  this.pDep = prog(GLSL_DEP_VS, GLSL_DEP_FS, ['uAg','uSize','uAS','uDep']);
+  this.pDif = prog(GLSL_VS_FULL, GLSL_DIFFUSE, ['uTr','uSize','uNode','uNN','uFood','uDec','uMix']);
+  this.pDis = prog(GLSL_VS_FULL, GLSL_DISPLAY, ['uTr','uRes','uTrSize','uTime','uGain','uNS','uNN','uFS','uLight']);
+  this.vao = gl.createVertexArray(); gl.bindVertexArray(this.vao);
+  var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
+  [this.pUpd, this.pDif, this.pDis].forEach(function(P){ var l = gl.getAttribLocation(P.p, 'p'); if(l >= 0){ gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0); } });
+  this.build();
+}
+GPUPhysarum.prototype.tex = function(w, h, ifmt, fmt, type, data, linear){
+  var gl = this.gl, t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texImage2D(gl.TEXTURE_2D, 0, ifmt, w, h, 0, fmt, type, data);
+  var f = linear ? gl.LINEAR : gl.NEAREST; gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, f); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, f);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); return t;
+};
+GPUPhysarum.prototype.fbo = function(t){
+  var gl = this.gl, f = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, f); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0);
+  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) throw new Error('fbo incomplete'); return f;
+};
+GPUPhysarum.prototype.build = function(){
+  var gl = this.gl, o = this.opt, c = this.canvas, mob = isMobile();
+  var dpr = Math.min(window.devicePixelRatio || 1, mob ? 1.5 : 2), cw = c.clientWidth || 800, ch = c.clientHeight || 500;
+  c.width = Math.round(cw * dpr); c.height = Math.round(ch * dpr); this.cw = cw; this.ch = ch; this.dpr = dpr;
+  var cell = mob ? 4 : (o.cell || 3); if(this.soft) cell *= 1.5;
+  this.W = Math.max(60, Math.round(cw / cell)); this.H = Math.max(40, Math.round(ch / cell)); this.sx = this.W / cw; this.sy = this.H / ch;
+  var AS = mob ? o.mobAS : o.AS; if(this.soft) AS = Math.min(AS, 128); this.AS = AS; this.N = AS * AS;
+  var lay = mob ? o.nodesMobile : o.nodes; this.nodes = lay.map(function(p){ return {x:p[0], y:p[1], r:p[2] || 1, ph:Math.random() * 6.28}; }); this.user = [];
+  // agents
+  var data = new Float32Array(this.N * 4), i, nd, W = this.W, H = this.H;
+  for(i = 0; i < this.N; i++){
+    var x, y;
+    if(i % 2 === 0 || !this.nodes.length){ x = Math.random() * W; y = Math.random() * H; }
+    else { nd = this.nodes[(Math.random() * this.nodes.length) | 0]; var ang = Math.random() * 6.283, rr = Math.pow(Math.random(), .6) * 26; x = Math.min(W - 2, Math.max(1, nd.x * W + Math.cos(ang) * rr)); y = Math.min(H - 2, Math.max(1, nd.y * H + Math.sin(ang) * rr)); }
+    data[i * 4] = x; data[i * 4 + 1] = y; data[i * 4 + 2] = Math.random() * 6.283; }
+  this.ag = [this.tex(AS, AS, gl.RGBA32F, gl.RGBA, gl.FLOAT, data, false), this.tex(AS, AS, gl.RGBA32F, gl.RGBA, gl.FLOAT, null, false)];
+  this.agF = [this.fbo(this.ag[0]), this.fbo(this.ag[1])]; this.ai = 0;
+  this.tr = [this.tex(W, H, gl.RGBA16F, gl.RGBA, gl.HALF_FLOAT, null, true), this.tex(W, H, gl.RGBA16F, gl.RGBA, gl.HALF_FLOAT, null, true)];
+  this.trF = [this.fbo(this.tr[0]), this.fbo(this.tr[1])]; this.ti = 0;
+  this.fld = this.tex(W, H, gl.R16F, gl.RED, gl.FLOAT, new Float32Array(W * H), true); this.uploadField();
+  this.stepNo = 0; this.gain = 0.46;
+};
+GPUPhysarum.prototype.uploadField = function(){
+  var gl = this.gl, W = this.W, H = this.H, S = new Float32Array(W * H), src = this.nodes.concat(this.user), k, gx, gy, q, sg2 = 2 * 16 * 16;
+  for(k = 0; k < src.length; k++){ var ncx = src[k].x * W, ncy = src[k].y * H;
+    for(gy = Math.max(0, (ncy - 70) | 0); gy < Math.min(H, ncy + 70); gy++) for(gx = Math.max(0, (ncx - 70) | 0); gx < Math.min(W, ncx + 70); gx++){ q = (gx - ncx) * (gx - ncx) + (gy - ncy) * (gy - ncy); if(q < 4900) S[gy * W + gx] += .9 * Math.exp(-q / sg2); } }
+  gl.bindTexture(gl.TEXTURE_2D, this.fld); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, W, H, gl.RED, gl.FLOAT, S);
+};
+GPUPhysarum.prototype.addUser = function(x, y){ this.user.push({x:x, y:y, r:2, ph:0}); if(this.user.length > 6) this.user.shift(); this.uploadField(); };
+GPUPhysarum.prototype.srcNodes = function(){ return this.nodes.concat(this.user); };
+GPUPhysarum.prototype.step = function(){
+  var gl = this.gl, W = this.W, H = this.H, P, nodes = this.srcNodes(), i;
+  gl.bindVertexArray(this.vao);
+  // 1. agent update
+  P = this.pUpd; gl.useProgram(P.p); gl.bindFramebuffer(gl.FRAMEBUFFER, this.agF[1 - this.ai]); gl.viewport(0, 0, this.AS, this.AS); gl.disable(gl.BLEND);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.ag[this.ai]); gl.uniform1i(P.u.uAg, 0);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, this.tr[this.ti]); gl.uniform1i(P.u.uTr, 1);
+  gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, this.fld); gl.uniform1i(P.u.uFld, 2);
+  gl.uniform2f(P.u.uSize, W, H); gl.uniform1f(P.u.uTime, (this.stepNo % 997) * .137); gl.uniform1f(P.u.uSD, 8); gl.uniform1f(P.u.uSA, .55); gl.uniform1f(P.u.uRT, .45); gl.uniform1f(P.u.uSS, 1);
+  gl.drawArrays(gl.TRIANGLES, 0, 3); this.ai = 1 - this.ai;
+  // 2. deposit (additive points)
+  P = this.pDep; gl.useProgram(P.p); gl.bindFramebuffer(gl.FRAMEBUFFER, this.trF[this.ti]); gl.viewport(0, 0, W, H);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.ag[this.ai]); gl.uniform1i(P.u.uAg, 0); gl.uniform2f(P.u.uSize, W, H); gl.uniform1i(P.u.uAS, this.AS); gl.uniform1f(P.u.uDep, Math.max(.04, Math.min(.25, .1 * .29 / (this.N / (W * H)))));
+  gl.drawArrays(gl.POINTS, 0, this.N); gl.disable(gl.BLEND);
+  // 3. diffuse + decay + food
+  P = this.pDif; gl.useProgram(P.p); gl.bindFramebuffer(gl.FRAMEBUFFER, this.trF[1 - this.ti]); gl.viewport(0, 0, W, H);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.tr[this.ti]); gl.uniform1i(P.u.uTr, 0); gl.uniform2f(P.u.uSize, W, H);
+  var nd = new Float32Array(64), n = Math.min(16, nodes.length);
+  for(i = 0; i < n; i++){ nd[i * 4] = nodes[i].x * W; nd[i * 4 + 1] = nodes[i].y * H; nd[i * 4 + 2] = .9 * (nodes[i].r > 1.2 ? 1 : .8); }
+  gl.uniform4fv(P.u.uNode, nd); gl.uniform1i(P.u.uNN, n);
+  if(this.food) gl.uniform3f(P.u.uFood, this.food.x * this.sx, this.food.y * this.sy, 1.1); else gl.uniform3f(P.u.uFood, 0, 0, 0);
+  gl.uniform1f(P.u.uDec, .925); gl.uniform1f(P.u.uMix, .3);
+  gl.drawArrays(gl.TRIANGLES, 0, 3); this.ti = 1 - this.ti; this.stepNo++;
+};
+GPUPhysarum.prototype.draw = function(time){
+  var gl = this.gl, P = this.pDis, nodes = this.srcNodes(), i, n = Math.min(16, nodes.length), dpr = this.dpr;
+  gl.bindVertexArray(this.vao); gl.useProgram(P.p); gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, this.canvas.width, this.canvas.height); gl.disable(gl.BLEND);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.tr[this.ti]); gl.uniform1i(P.u.uTr, 0);
+  gl.uniform2f(P.u.uRes, this.canvas.width, this.canvas.height); gl.uniform2f(P.u.uTrSize, this.W, this.H); gl.uniform1f(P.u.uTime, time); gl.uniform1f(P.u.uGain, this.gain);
+  var ns = new Float32Array(64);
+  for(i = 0; i < n; i++){ ns[i * 4] = nodes[i].x * this.canvas.width; ns[i * 4 + 1] = (1 - nodes[i].y) * this.canvas.height; ns[i * 4 + 2] = (nodes[i].r > 1.2 ? 30 : 22) * dpr; ns[i * 4 + 3] = nodes[i].ph; }
+  gl.uniform4fv(P.u.uNS, ns); gl.uniform1i(P.u.uNN, n);
+  if(this.food) gl.uniform3f(P.u.uFS, this.food.x * dpr, this.canvas.height - this.food.y * dpr, 1); else gl.uniform3f(P.u.uFS, 0, 0, 0);
+  var lx = this.food ? this.food.x / this.cw : this.light.x, ly = this.food ? this.food.y / this.ch : this.light.y; gl.uniform2f(P.u.uLight, lx, ly);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+};
+GPUPhysarum.prototype.prewarm = function(n){ for(var i = 0; i < n; i++) this.step(); };
+GPUPhysarum.prototype.dispose = function(){ var ext = this.gl.getExtension('WEBGL_lose_context'); };
+
+function makeSim(canvas, opt){
+  try { return new GPUPhysarum(canvas, opt); }
+  catch(err){
+    // a canvas that already has a webgl2 context cannot hand out 2d: swap in a fresh one
+    var c2 = document.createElement('canvas'); c2.className = canvas.className; c2.id = canvas.id; c2.setAttribute('aria-hidden', 'true'); canvas.replaceWith(c2);
+    var sim = new Physarum(c2, opt); sim.addUser = function(x, y){ this.user.push({x:x, y:y, r:2, ph:0}); if(this.user.length > 6) this.user.shift(); }; return sim;
+  }
+}
+
+var NODES = [[.61,.2,1.5],[.83,.28,1.5],[.7,.5,2],[.92,.6,1.5],[.55,.74,1.5],[.79,.84,1.5],[.38,.9,1.5],[.1,.76,1.5],[.47,.11,1.5]];
+var NODES_M = [[.2,.5,1.5],[.78,.46,1.5],[.5,.64,2],[.14,.78,1.5],[.86,.76,1.5],[.5,.9,1.5]];
+var NAMES = ['Port Alder','Karst Yard','Mereway Hub','Orrin Gate','Tallow Depot','Brae Junction','Windle Quay','Fenmoor','Ashby Cross'];
+
+var hero = makeSim(document.getElementById('heroSim'), {AS:256, mobAS:112, agents:42000, mobAgents:11000, cell:3, nodes:NODES, nodesMobile:NODES_M});
+var cta = makeSim(document.getElementById('ctaSim'), {AS:128, mobAS:64, agents:14000, mobAgents:5000, cell:5, nodes:[[.08,.5,1.5],[.28,.2,1.5],[.3,.82,1.5],[.7,.18,1.5],[.72,.84,1.5],[.93,.5,1.5]], nodesMobile:[[.2,.2,1.5],[.8,.3,1.5],[.5,.5,1.5],[.2,.8,1.5],[.8,.85,1.5]]});
+document.getElementById('agentCount').textContent = hero.N.toLocaleString('en-US');
+
+// labels (decorative)
+var labelsEl = document.getElementById('labels');
+function placeLabels(){
+  labelsEl.innerHTML = '';
+  var lay = isMobile() ? NODES_M : NODES, hb = document.getElementById('heroSim').getBoundingClientRect();
+  /* on phones the copy spans the full width: never print a hub label over the headline, lead or buttons */
+  var copy = document.querySelector('.hero .copy'), tTop = copy.firstElementChild.getBoundingClientRect().top - hb.top - 48, tBot = copy.lastElementChild.getBoundingClientRect().bottom - hb.top + 48;
+  lay.forEach(function(p, i){ if(!isMobile() && p[0] < .35) return; if(isMobile() && p[1] * hb.height > tTop && p[1] * hb.height < tBot) return; var s = document.createElement('span'); s.className = 'nodelabel mono' + (i > 3 ? ' lg' : ''); if(p[0] > .86 && !isMobile()) s.style.transform = 'translate(calc(-100% - 14px),-50%)'; s.innerHTML = '<i>' + String(i + 1).padStart(2, '0') + '</i>' + NAMES[i];
+    s.style.left = (p[0] * hb.width) + 'px'; s.style.top = (p[1] * hb.height) + 'px'; labelsEl.appendChild(s); });
+}
+placeLabels();
+if(document.fonts) document.fonts.ready.then(placeLabels); /* the copy settles its height once the web fonts arrive */
+
+hero.prewarm(hero.soft ? 80 : reduce ? 260 : 150); cta.prewarm(cta.soft ? 60 : reduce ? 220 : 120);
+hero.draw(0); cta.draw(0);
+
+/* pointer: food + click anchors (hero only) */
+var heroEl = document.getElementById('top');
+function inUI(t){ return t.closest && t.closest('a,button,input,nav'); }
+heroEl.addEventListener('pointermove', function(e){
+  if(reduce) return;
+  var r = hero.canvas.getBoundingClientRect(); hero.food = {x:e.clientX - r.left, y:e.clientY - r.top}; hero.lastMove = performance.now();
+});
+heroEl.addEventListener('pointerleave', function(){ hero.food = null; });
+heroEl.addEventListener('pointerdown', function(e){
+  if(inUI(e.target) || reduce) return;
+  var r = hero.canvas.getBoundingClientRect();
+  hero.addUser((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+});
+
+/* loop */
+var heroVis = true, ctaVis = false;
+new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.target === hero.canvas) heroVis = e.isIntersecting; else ctaVis = e.isIntersecting; }); }, {threshold:0}).observe(hero.canvas);
+var io2 = new IntersectionObserver(function(es){ es.forEach(function(e){ ctaVis = e.isIntersecting; }); }); io2.observe(cta.canvas);
+new IntersectionObserver(function(es){ es.forEach(function(e){ heroVis = e.isIntersecting; }); }).observe(hero.canvas);
+
+var stepEl = document.getElementById('stepCount'), frame = 0, raf = 0;
+function loop(t){
+  raf = 0;
+  if(paused) return;                 /* the network holds its shape until motion resumes */
+  raf = requestAnimationFrame(loop);
+  if(document.hidden) return;
+  var time = t / 1000, spf = isMobile() ? 1 : 2;
+  if(hero.food && performance.now() - hero.lastMove > 1600) hero.food = null;
+  if(heroVis){ for(var i = 0; i < spf; i++) hero.step(); hero.draw(time); if((frame++ % 6) === 0) stepEl.textContent = hero.stepNo; }
+  if(ctaVis){ cta.step(); cta.draw(time); }
+}
+function wake(){ if(!raf && !paused) raf = requestAnimationFrame(loop); }
+onPause.push(function(p){ if(!p) wake(); });
+wake();
+
+var rt;
+addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ hero.build(); cta.build(); hero.prewarm(hero.soft ? 80 : reduce ? 260 : 150); cta.prewarm(cta.soft ? 60 : reduce ? 220 : 120); hero.draw(0); cta.draw(0); placeLabels(); }, 250); });
+
+/* ---------- page chrome ---------- */
+var nav = document.getElementById('nav');
+function onScroll(){ nav.classList.toggle('solid', scrollY > 40); }
+addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+/* Reveals are a pure function of scroll position, read from layout offsets that ignore the hidden-state
+   transform, so scrolling back up undoes them exactly. Everything shows once the page reaches its end. */
+function revealByScroll(els, enterAt){
+  var tops = [];
+  function update(){
+    var line = scrollY + innerHeight * enterAt, end = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+    for (var i = 0; i < els.length; i++) els[i].classList.toggle('in', end || tops[i] < line);
+  }
+  function measure(){
+    tops = els.map(function(el){ var y = 0; for (var n = el; n; n = n.offsetParent) y += n.offsetTop; return y; });
+    update();
+  }
+  addEventListener('scroll', update, {passive:true});
+  addEventListener('resize', measure);
+  addEventListener('load', measure);
+  if (document.fonts) document.fonts.ready.then(measure);
+  measure();
+}
+var rvs = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+if(!reduce) revealByScroll(rvs, .88);
+else rvs.forEach(function(el){ el.classList.add('in'); });
+
+var counters = document.querySelectorAll('[data-count]');
+function runCount(el){
+  var to = parseFloat(el.dataset.count), dec = +el.dataset.dec || 0;
+  if(reduce){ el.textContent = to.toFixed(dec); return; }
+  var t0 = performance.now(), dur = 1400;
+  (function tick(now){ var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.textContent = (to * e).toFixed(dec); if(p < 1) requestAnimationFrame(tick); })(t0);
+}
+var co = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ runCount(e.target); co.unobserve(e.target); } }); }, {threshold:.4});
+counters.forEach(function(c){ co.observe(c); });
+
+document.getElementById('pilotForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var v = document.getElementById('email'), t = document.getElementById('thanks');
+  t.textContent = /\S+@\S+\.\S+/.test(v.value) ? 'Seeded. We will be in touch within two business days.' : 'Please enter a valid work email.';
+});
+})();
+</script>
+</body>
+</html>

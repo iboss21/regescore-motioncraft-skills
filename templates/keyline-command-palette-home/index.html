@@ -1,0 +1,520 @@
+<!doctype html>
+<!--
+  Keyline Command Palette Home: a free template by AnimatedWebs (https://animatedwebs.com/templates/keyline-command-palette-home)
+  Copyright 2026 LIKE A KING INC. Free for personal and commercial websites, including client work.
+  Do not resell or redistribute it as a template. Full terms: templates/LICENSE.md in the MotionCraft Skills repo.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Keyline · Everything, one keystroke away</title>
+<meta name="description" content="Keyline is a keyboard-first workspace launcher: search docs, run automations and ask an AI, all from one Cmd+K box." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root { --bg:#f6f5f1; --fg:#151515; --muted:rgba(21,21,21,.62); --dim:rgba(21,21,21,.4); --line:rgba(21,21,21,.12); --blue:#3b5bff; --amber:#ffb020; --ease:cubic-bezier(.2,.8,.2,1); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { background:var(--bg); }
+  body { background:var(--bg); color:var(--fg); font:400 16px/1.6 Inter, system-ui, sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  a { color:inherit; text-decoration:none; }
+  button { font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+  .mono { font:500 12px/1.2 "JetBrains Mono", ui-monospace, monospace; letter-spacing:.08em; }
+  .display { font-family:"Inter Tight", sans-serif; font-weight:800; letter-spacing:-.035em; line-height:1.0; }
+  .wrap { max-width:1200px; margin:0 auto; padding:0 40px; }
+  .btn { display:inline-flex; align-items:center; gap:10px; height:52px; padding:0 26px; border-radius:14px; font-weight:600; font-size:15px; background:var(--blue); color:#fff; transition:transform .3s var(--ease), box-shadow .3s; }
+  .btn:hover { transform:translateY(-2px); box-shadow:0 16px 30px -14px rgba(59,91,255,.5); }
+  .link { display:inline-flex; align-items:center; min-height:44px; text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:5px; transition:text-decoration-color .3s, color .3s; color:var(--muted); }
+  .link:hover { text-decoration-color:var(--fg); color:var(--fg); }
+  :focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+  .kc { display:inline-flex; align-items:center; justify-content:center; padding:2px 10px 6px; border-radius:10px; border-bottom:2px solid #cfcac0; background:#fff; box-shadow:0 1px 0 #fff inset; position:relative; top:0; transition:transform .12s ease, border-bottom-width .12s ease, top .12s ease; }
+  .kc.press { top:2px; border-bottom-width:0; transform:translateY(1px); }
+
+  nav { position:fixed; top:0; left:0; right:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:24px 40px; }
+  nav.solid { background:rgba(246,245,241,.86); backdrop-filter:blur(14px); box-shadow:0 1px 0 var(--line); padding:16px 40px; }
+  .brand { display:flex; align-items:center; gap:9px; min-height:44px; font-family:"Inter Tight",sans-serif; font-weight:800; font-size:19px; letter-spacing:-.02em; }
+  .brand .dot { width:9px; height:9px; border-radius:3px; background:var(--blue); }
+  nav ul { list-style:none; display:flex; gap:30px; }
+  nav ul a { color:var(--muted); font-size:15px; transition:color .3s; }
+  nav ul a:hover { color:var(--fg); }
+  @media (max-width:860px) { nav ul { display:none; } }
+  .nav-end { display:flex; align-items:center; gap:10px; }
+  /* pause control: stops the self-typing demo, the ripples and the key wall */
+  .pause { display:inline-grid; place-items:center; width:44px; height:44px; flex:none; border-radius:50%; border:1px solid var(--line); background:#fff; color:var(--fg); transition:border-color .3s; }
+  .pause:hover { border-color:var(--fg); }
+  .pause svg { width:14px; height:14px; fill:currentColor; }
+  .pause .i-play, .pause[aria-pressed="true"] .i-pause { display:none; }
+  .pause[aria-pressed="true"] .i-play { display:block; }
+  .still *, .still *::before, .still *::after { animation-play-state:paused !important; }
+
+  /* hero */
+  #hero { position:relative; padding:150px 0 60px; overflow:hidden; }
+  #dotgrid { position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0; }
+  .hero-inner { position:relative; z-index:2; text-align:center; }
+  .hero-inner h1 { font-size:clamp(34px, 6vw, 72px); }
+  .hero-inner h1 .kc { font-size:.86em; margin:0 .06em; transform:translateY(-.08em); }
+  .hero-sub { margin:22px auto 0; max-width:46ch; color:var(--muted); font-size:18px; }
+  .hero-ctas { margin-top:34px; display:flex; gap:20px; align-items:center; justify-content:center; }
+  .kbd-hint { margin-top:18px; color:var(--dim); font-size:13px; }
+  .kbd-hint .kc { padding:1px 8px 4px; font:600 11px "JetBrains Mono"; margin:0 3px; }
+
+  .palette { position:relative; z-index:2; width:min(680px, 92vw); margin:56px auto 0; background:#fff; border-radius:20px; box-shadow:0 30px 80px -20px rgba(21,21,21,.25); border:1px solid rgba(21,21,21,.06); overflow:hidden; }
+  .palette-input { display:flex; align-items:center; gap:12px; padding:6px 22px; border-bottom:1px solid var(--line); transition:box-shadow .2s; }
+  .palette-input:focus-within { box-shadow:inset 0 -2px 0 var(--blue); }
+  .palette-input svg { flex:none; opacity:.5; }
+  .palette-input input, .palette-input .fake-input { flex:1; min-width:0; min-height:44px; border:0; outline:0; font:500 17px "Inter Tight"; background:none; color:var(--fg); }
+  .palette-input .fake-input { display:flex; align-items:center; text-align:left; }
+  .palette-input .esc { font:500 11px "JetBrains Mono"; color:var(--dim); border:1px solid var(--line); border-radius:6px; padding:2px 6px; }
+  .palette-list { list-style:none; padding:8px; min-height:322px; }
+  .palette-list li { display:flex; align-items:center; gap:14px; padding:11px 12px; border-radius:10px; font-size:15px; position:relative; }
+  .palette-list li .ico { width:30px; height:30px; border-radius:8px; display:grid; place-items:center; background:rgba(59,91,255,.1); color:var(--blue); flex:none; font-size:14px; }
+  .palette-list li .lbl { flex:1; }
+  .palette-list li .lbl small { display:block; color:var(--dim); font-size:12px; margin-top:1px; }
+  .palette-list li .sc { display:flex; gap:4px; }
+  .palette-list li .sc span { font:600 11px "JetBrains Mono"; color:var(--dim); border:1px solid var(--line); border-radius:6px; padding:2px 6px; }
+  .hi-pill { position:absolute; left:6px; right:6px; height:44px; border-radius:10px; background:rgba(59,91,255,.08); z-index:0; pointer-events:none; transition:transform .18s var(--ease), opacity .2s; opacity:0; }
+  .palette-list li > * { position:relative; z-index:1; }
+  .palette-list li.flash .ico { background:var(--blue); color:#fff; transition:background .25s, color .25s; }
+  .toast { position:absolute; left:16px; right:16px; bottom:-56px; background:var(--fg); color:#fff; border-radius:12px; padding:12px 16px; font-size:13px; display:flex; align-items:center; gap:10px; transition:bottom .4s var(--ease); }
+  .toast.show { bottom:16px; }
+  .ai-answer { padding:20px 24px; font-size:15px; line-height:1.7; color:var(--fg); min-height:280px; }
+  .ai-answer .ln { opacity:0; transform:translateY(6px); transition:opacity .4s, transform .4s; margin-bottom:10px; }
+  .ai-answer .ln.on { opacity:1; transform:none; }
+  .ai-answer .ln b { color:var(--blue); }
+
+  /* pillars */
+  #pillars { padding:150px 0; background:var(--bg); position:relative; z-index:2; }
+  .pillar-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; }
+  .pillar h3 { font:800 24px "Inter Tight"; letter-spacing:-.02em; margin-top:22px; }
+  .pillar p { color:var(--muted); margin-top:10px; max-width:32ch; }
+  .pillar svg path { stroke-dasharray:220; stroke-dashoffset:220; transition:stroke-dashoffset 1s var(--ease); }
+  .pillar.in svg path { stroke-dashoffset:0; }
+  @media (max-width:860px) { .pillar-grid { grid-template-columns:1fr; gap:56px; } }
+
+  /* shortcut wall */
+  #wall { padding:0 0 150px; }
+  .sec-head { max-width:640px; margin-bottom:16px; }
+  .sec-head .mono { color:var(--blue); }
+  .sec-head h2 { font-size:clamp(28px,4vw,44px); margin-top:12px; }
+  .wall-caption { min-height:22px; color:var(--muted); font-size:14px; margin-bottom:26px; }
+  .wall-caption b { color:var(--fg); }
+  .keycap-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:10px; }
+  .keycap { aspect-ratio:1; border-radius:12px; border-bottom:3px solid #d8d3c8; background:#fff; display:grid; place-items:center; font:600 13px "JetBrains Mono"; cursor:pointer; transition:transform .1s, border-bottom-width .1s, background .3s, color .3s; }
+  .keycap.press { transform:translateY(2px); border-bottom-width:0; }
+  .keycap.glow { background:var(--amber); color:#241704; }
+  @media (max-width:860px) { .keycap-grid { grid-template-columns:repeat(4,1fr); } }
+
+  /* extensions */
+  #extensions { padding:0 0 150px; }
+  .ext-row { display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory; padding:6px 40px 20px; cursor:grab; }
+  .ext-row::-webkit-scrollbar { display:none; }
+  .ext-card { flex:none; scroll-snap-align:start; width:240px; padding:22px; border-radius:18px; background:#fff; border:1px solid var(--line); }
+  .ext-mono { width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font:800 16px "Inter Tight"; color:#fff; margin-bottom:16px; }
+  .ext-card h4 { font:700 16px "Inter Tight"; }
+  .ext-card .installs { color:var(--dim); font-size:12px; margin-top:4px; }
+  .ext-card p { color:var(--muted); font-size:13px; margin-top:10px; }
+
+  /* testimonials */
+  #testimonials { padding:0 0 0; }
+  .quote-row { display:flex; gap:26px; justify-content:center; flex-wrap:wrap; }
+  .quote-card { width:320px; padding:28px; border-radius:18px; background:#fff; border:1px solid var(--line); transition:transform .35s var(--ease); }
+  .quote-card:nth-child(1) { transform:rotate(-2deg); }
+  .quote-card:nth-child(2) { transform:rotate(1deg); }
+  .quote-card:nth-child(3) { transform:rotate(-1deg); }
+  .quote-card:hover { transform:rotate(0deg) translateY(-4px); }
+  .quote-card p { font-size:15px; line-height:1.6; }
+  .quote-card .who { margin-top:16px; display:flex; align-items:center; gap:10px; }
+  .quote-card .who .av { width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; display:grid; place-items:center; font:700 13px "Inter Tight"; }
+  .quote-card .who small { color:var(--dim); display:block; }
+
+  #cta-band { margin-top:110px; background:var(--blue); padding:100px 0; text-align:center; color:#fff; }
+  #cta-band h2 { font-size:clamp(30px,4.4vw,52px); }
+  #cta-band .palette { transform:scale(1); width:min(480px,90vw); margin-top:40px; color:var(--fg); }
+  #cta-band .btn { margin-top:34px; background:#fff; color:var(--blue); }
+  #cta-band .btn:hover { box-shadow:0 16px 30px -14px rgba(0,0,0,.35); }
+
+  footer { padding:70px 0 30px; background:var(--bg); }
+  .fgrid { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; }
+  .fgrid h4 { font:700 12px "JetBrains Mono"; letter-spacing:.06em; text-transform:uppercase; color:var(--dim); margin-bottom:14px; }
+  .fgrid ul { list-style:none; display:grid; gap:9px; font-size:14px; color:var(--muted); }
+  .fgrid ul a:hover { color:var(--fg); }
+  .credit { text-align:center; font-size:11px; color:var(--dim); padding:36px 0 6px; }
+  @media (max-width:860px) { .fgrid { grid-template-columns:1fr 1fr; } .fgrid ul { gap:0; } .fgrid ul a { display:inline-flex; align-items:center; min-height:44px; min-width:44px; } }
+  @media (max-width:640px) { nav, nav.solid { padding-left:20px; padding-right:20px; } .wrap { padding:0 20px; } .ext-row { padding:6px 20px 20px; } }
+  @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation:none !important; transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="brand" href="#top"><span class="dot"></span>Keyline</a>
+  <ul>
+    <li><a href="#pillars">Product</a></li>
+    <li><a href="#wall">Shortcuts</a></li>
+    <li><a href="#extensions">Extensions</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+  </ul>
+  <div class="nav-end">
+    <button class="pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion" title="Pause motion">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l8 5-8 5z"/></svg>
+    </button>
+    <a class="btn" style="height:44px;font-size:14px" href="#cta-band">Download for Mac</a>
+  </div>
+</nav>
+
+<main id="top">
+<section id="hero" aria-label="Keyline hero">
+  <canvas id="dotgrid" aria-hidden="true"></canvas>
+  <div class="hero-inner wrap">
+    <h1 class="display">Everything, one <span class="kc" id="kcHead">keystroke</span> away.</h1>
+    <p class="hero-sub">Keyline is the keyboard-first launcher that puts search, automations and an AI teammate behind one box. No mouse required.</p>
+    <div class="hero-ctas">
+      <a class="btn" href="#cta-band">Download for Mac</a>
+      <a class="link" href="#cta-band">Windows &amp; Linux</a>
+    </div>
+    <p class="kbd-hint">Press <span class="kc">⌘</span><span class="kc">K</span> to try it live</p>
+
+    <div class="palette" id="palette" role="combobox" aria-expanded="true">
+      <div class="palette-input">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="paletteInput" type="text" aria-label="Search docs, run a command, or ask AI" placeholder="Search docs, run a command, or ask AI…" autocomplete="off" aria-autocomplete="list" aria-activedescendant="" />
+        <span class="esc mono">ESC</span>
+      </div>
+      <ul class="palette-list" id="paletteList"><div class="hi-pill" id="hiPill"></div></ul>
+      <div class="ai-answer" id="aiAnswer" style="display:none"></div>
+      <div class="toast" id="toast"><span>✓</span><span id="toastText">Done</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="pillars" aria-label="Three pillars">
+  <div class="wrap">
+    <div class="pillar-grid">
+      <article class="pillar">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><circle cx="34" cy="34" r="18" stroke="#3b5bff" stroke-width="1.5"/><path d="M47 47L62 62" stroke="#3b5bff" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <h3>Search</h3>
+        <p>Every doc, ticket and message, fuzzy-matched and ranked in under 40ms.</p>
+      </article>
+      <article class="pillar">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><rect x="14" y="14" width="24" height="24" rx="4" stroke="#3b5bff" stroke-width="1.5"/><path d="M38 26h28M52 12v28" stroke="#3b5bff" stroke-width="1.5" stroke-linecap="round"/><rect x="42" y="42" width="24" height="24" rx="4" stroke="#3b5bff" stroke-width="1.5"/></svg>
+        <h3>Automate</h3>
+        <p>Chain the tools you already use into one keystroke, no glue code.</p>
+      </article>
+      <article class="pillar">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><path d="M40 12l8 18 20 3-15 14 4 20-17-10-17 10 4-20-15-14 20-3z" stroke="#3b5bff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <h3>Ask</h3>
+        <p>An AI teammate that already knows your stack, your docs and your history.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="wall" aria-label="Shortcut wall">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="mono">Shortcut wall</span>
+      <h2 class="display">Every action, one chord.</h2>
+    </div>
+    <div class="wall-caption" id="wallCaption">Hover a key to see what it does.</div>
+    <div class="keycap-grid" id="keycapGrid"></div>
+  </div>
+</section>
+
+<section id="extensions" aria-label="Extensions gallery">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="mono">Extensions</span>
+      <h2 class="display">Bring your own tools.</h2>
+    </div>
+  </div>
+  <div class="ext-row" id="extRow"></div>
+</section>
+
+<section id="testimonials" aria-label="Testimonials">
+  <div class="wrap">
+    <div class="sec-head" style="text-align:center;margin:0 auto 50px"><span class="mono">Loved by fast teams</span><h2 class="display">Ask anyone who's tried it.</h2></div>
+    <div class="quote-row">
+      <div class="quote-card"><p>"I stopped touching my mouse in the first week. Keyline is just faster than clicking."</p><div class="who"><span class="av">RN</span><div><b>Ryan Nash</b><small>Eng lead, Fennec</small></div></div></div>
+      <div class="quote-card"><p>"The Ask command replaced four chat channels of 'does anyone know where…'"</p><div class="who"><span class="av">JT</span><div><b>Jonah Torres</b><small>Ops, Marlow Co.</small></div></div></div>
+      <div class="quote-card"><p>"Our onboarding doc is one keystroke now: >setup. That alone paid for the year."</p><div class="who"><span class="av">EA</span><div><b>Emily Adams</b><small>Founder, Driftwork</small></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="cta-band">
+  <div class="wrap">
+    <h2 class="display">Download Keyline. Keep your hands on the keys.</h2>
+    <div class="palette" aria-hidden="true">
+      <div class="palette-input"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="fake-input">⌘K</span></div>
+    </div>
+    <a class="btn" href="#top">Download for Mac</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap fgrid">
+    <div><a class="brand" href="#top"><span class="dot"></span>Keyline</a><p style="color:var(--muted);margin-top:14px;max-width:32ch">The keyboard-first launcher for fast teams.</p></div>
+    <div><h4>Product</h4><ul><li><a href="#pillars">Overview</a></li><li><a href="#extensions">Extensions</a></li><li><a href="#">Changelog</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li></ul></div>
+    <div><h4>Resources</h4><ul><li><a href="#">Docs</a></li><li><a href="#">API</a></li><li><a href="#">Status</a></li></ul></div>
+  </div>
+  <p class="credit">Template by <a href="https://animatedwebs.com">AnimatedWebs</a> &middot; animatedwebs.com</p>
+</footer>
+
+<script>
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const nav = document.getElementById("nav");
+addEventListener("scroll", () => nav.classList.toggle("solid", scrollY > 40), { passive: true });
+
+/* pause control: one flag every moving part reads.
+   Starts pressed when the OS asks for reduced motion, so a visitor can still opt in. */
+let paused = reduced;
+const onPause = [], pauseBtn = document.getElementById("pause");
+function setPaused(p) {
+  paused = p;
+  pauseBtn.setAttribute("aria-pressed", String(p));
+  document.documentElement.classList.toggle("still", p);
+  onPause.forEach((fn) => fn(p));
+}
+pauseBtn.addEventListener("click", () => setPaused(!paused));
+setPaused(paused);
+
+/* keycap in headline depresses every 3s */
+setInterval(() => { if (paused) return; const k = document.getElementById("kcHead"); k.classList.add("press"); setTimeout(() => k.classList.remove("press"), 220); }, 3000);
+
+/* ================= dot grid + ripple ================= */
+const canvas = document.getElementById("dotgrid");
+const ctx = canvas.getContext("2d");
+let dpr = Math.min(devicePixelRatio || 1, 1.75), W = 0, H = 0, GAP = 22, dots = [];
+function buildDots() {
+  dots = [];
+  for (let y = 10; y < H / dpr; y += GAP) for (let x = 10; x < W / dpr; x += GAP) dots.push({ x, y, s: 1 });
+}
+function resize() {
+  const hero = document.getElementById("hero");
+  W = canvas.width = hero.clientWidth * dpr; H = canvas.height = hero.clientHeight * dpr;
+  canvas.style.width = hero.clientWidth + "px"; canvas.style.height = hero.clientHeight + "px";
+  buildDots();
+}
+addEventListener("resize", resize); resize();
+const ripples = [];
+function addRipple(x, y) { ripples.push({ x, y, t: 0 }); if (ripples.length > 5) ripples.shift(); }
+function drawGrid(now) {
+  ctx.clearRect(0, 0, W, H);
+  ctx.save(); ctx.scale(dpr, dpr);
+  for (const r of ripples) r.t += 16;
+  while (ripples.length && ripples[0].t > 1400) ripples.shift();
+  for (const d of dots) {
+    let scale = 1;
+    for (const r of ripples) {
+      const dist = Math.hypot(d.x - r.x, d.y - r.y);
+      const ringR = (r.t / 1400) * 260;
+      const band = Math.abs(dist - ringR);
+      if (band < 26 && dist < 260) scale = Math.max(scale, 1 + (1 - band / 26) * 0.8 * (1 - r.t / 1400));
+    }
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, 1 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(21,21,21,.12)";
+    ctx.fill();
+  }
+  ctx.restore();
+  gridRaf = !paused && !document.hidden ? requestAnimationFrame(drawGrid) : 0;
+}
+let gridRaf = 0;
+// keep one loop: cancel any queued frame before starting again
+const startGrid = () => { cancelAnimationFrame(gridRaf); gridRaf = requestAnimationFrame(drawGrid); };
+startGrid();
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !paused) startGrid(); });
+onPause.push((p) => { if (!p) startGrid(); });
+addEventListener("resize", () => { if (paused) drawGrid(0); }); // a resize clears the canvas
+
+/* ================= command palette demo ================= */
+const paletteEl = document.getElementById("palette");
+const input = document.getElementById("paletteInput");
+const listEl = document.getElementById("paletteList");
+const hiPill = document.getElementById("hiPill");
+const aiAnswer = document.getElementById("aiAnswer");
+const toast = document.getElementById("toast");
+const toastText = document.getElementById("toastText");
+
+const ICONS = { doc: "📄", folder: "📁", ai: "✦", cmd: "▸", chat: "💬", deploy: "⇪", cal: "⏱" };
+const ALL_ACTIONS = [
+  ["doc", "Create invoice", "Docs · new"], ["folder", "Invoices folder", "Finance"], ["ai", "Ask AI: overdue invoices", "AI"],
+  ["doc", "Invoice template", "Docs"], ["cmd", "Export invoices to CSV", "Command"], ["chat", "#finance channel", "Chat"],
+  ["cal", "Schedule invoice reminder", "Automation"], ["doc", "Q3 invoice summary", "Docs"],
+  ["cmd", "Daily standup notes", "Command"], ["chat", "#standup channel", "Chat"], ["cal", "Standup, 9:30 daily", "Calendar"],
+  ["doc", "Standup template", "Docs"], ["ai", "Ask AI: yesterday's standup", "AI"],
+  ["deploy", ">deploy staging", "Command"], ["deploy", ">deploy production", "Command"], ["doc", "Deploy runbook", "Docs"],
+  ["chat", "#deploys channel", "Chat"], ["cmd", "Rollback last deploy", "Command"],
+  ["ai", "?what shipped this week", "AI"], ["doc", "Weekly changelog", "Docs"], ["chat", "#product channel", "Chat"],
+  ["folder", "Design files", "Design"], ["doc", "Onboarding guide", "Docs"], ["cmd", "Invite teammate", "Command"],
+  ["cal", "Book a room", "Calendar"], ["chat", "#general channel", "Chat"], ["doc", "Runbook: incidents", "Docs"],
+  ["ai", "Ask AI: last release notes", "AI"], ["cmd", "Open settings", "Command"], ["folder", "Contracts", "Legal"],
+  ["doc", "Brand guidelines", "Docs"], ["cmd", "Toggle dark mode", "Command"], ["chat", "#eng channel", "Chat"],
+  ["ai", "Ask AI: summarize thread", "AI"], ["folder", "Marketing assets", "Marketing"], ["doc", "API reference", "Docs"],
+  ["cmd", "Create pull request", "Command"], ["cal", "Plan sprint", "Calendar"], ["chat", "#random channel", "Chat"],
+  ["doc", "Security policy", "Docs"], ["cmd", "Search people", "Command"],
+];
+
+function renderRows(rows) {
+  listEl.querySelectorAll("li").forEach((n) => n.remove());
+  rows.forEach((r, i) => {
+    const li = document.createElement("li");
+    li.id = "row-" + i;
+    li.innerHTML = `<span class="ico">${ICONS[r[0]] || "▸"}</span><span class="lbl">${r[1]}<small>${r[2]}</small></span><span class="sc">${(r[3] || []).map((k) => `<span>${k}</span>`).join("")}</span>`;
+    listEl.appendChild(li);
+  });
+}
+function setHighlight(i) {
+  const rows = [...listEl.querySelectorAll("li")];
+  rows.forEach((r) => r.setAttribute("aria-selected", "false"));
+  if (i == null || !rows[i]) { hiPill.style.opacity = 0; return; }
+  const r = rows[i];
+  r.setAttribute("aria-selected", "true");
+  hiPill.style.opacity = 1;
+  hiPill.style.transform = `translateY(${r.offsetTop - 8}px)`;
+  hiPill.style.height = r.offsetHeight + "px";
+}
+
+const SCENARIOS = [
+  { q: "inv", rows: [["doc","Create invoice","Docs · new",["⏎"]], ["folder","Invoices folder","Finance",["⌘","F"]], ["ai","Ask AI: overdue invoices","AI",["⌘","J"]], ["doc","Invoice template","Docs",[]], ["cmd","Export invoices to CSV","Command",[]]], select: 0, success: "Invoice draft created" },
+  { q: "standup", rows: [["cmd","Daily standup notes","Command",["⏎"]], ["chat","#standup channel","Chat",[]], ["cal","Standup, 9:30 daily","Calendar",[]], ["doc","Standup template","Docs",[]], ["ai","Ask AI: yesterday's standup","AI",[]]], select: 2, success: "Reminder confirmed for 9:30" },
+  { q: ">deploy", rows: [["deploy",">deploy staging","Command",["⏎"]], ["deploy",">deploy production","Command",[]], ["doc","Deploy runbook","Docs",[]], ["chat","#deploys channel","Chat",[]], ["cmd","Rollback last deploy","Command",[]]], select: 0, success: "Deploying to staging…" },
+  { q: "?what shipped this week", ai: true },
+];
+const AI_LINES = ["<b>3 releases</b> shipped this week across web and API.", "Biggest change: the new <b>Automations v2</b> engine (12% faster runs).", "Also: dark mode polish, and 4 bug fixes in the search index."];
+
+let demoPaused = false, demoTimer = null;
+const halted = () => demoPaused || paused; // the visitor took the palette, or paused motion
+function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+async function typeText(el, text) {
+  el.value = "";
+  for (let i = 0; i < text.length; i++) {
+    if (halted()) return false;
+    el.value += text[i];
+    addRipple(...heroRelPos());
+    await sleep((i % 8 === 7 ? 190 : 70));
+  }
+  return true;
+}
+function heroRelPos() {
+  const r = paletteEl.getBoundingClientRect(), h = document.getElementById("hero").getBoundingClientRect();
+  return [r.left + r.width / 2 - h.left, r.top - h.top];
+}
+async function runScenario(s) {
+  aiAnswer.style.display = "none"; listEl.style.display = ""; toast.classList.remove("show");
+  renderRows([]); setHighlight(null);
+  const ok = await typeText(input, s.q);
+  if (!ok) return;
+  await sleep(160);
+  if (halted()) return;
+  if (s.ai) {
+    listEl.style.display = "none"; aiAnswer.style.display = "block";
+    aiAnswer.innerHTML = AI_LINES.map((l) => `<p class="ln">${l}</p>`).join("");
+    const lines = [...aiAnswer.querySelectorAll(".ln")];
+    for (const l of lines) { if (halted()) return; l.classList.add("on"); await sleep(500); }
+    await sleep(1400);
+    return;
+  }
+  renderRows(s.rows);
+  await sleep(200);
+  for (let i = 0; i <= s.select; i++) { if (halted()) return; setHighlight(i); await sleep(220); }
+  await sleep(260);
+  if (halted()) return;
+  const rows = [...listEl.querySelectorAll("li")];
+  rows[s.select]?.classList.add("flash");
+  toastText.textContent = s.success;
+  toast.classList.add("show");
+  await sleep(1500);
+}
+async function demoLoop() {
+  let i = 0;
+  while (true) {
+    if (halted()) { await sleep(300); continue; }
+    await runScenario(SCENARIOS[i % SCENARIOS.length]);
+    i++;
+    await sleep(500);
+  }
+}
+// reduced motion opens on a composed still: the first search, already answered
+if (reduced) { renderRows(SCENARIOS[0].rows.slice(0,5)); setHighlight(0); }
+demoLoop();
+
+/* interactive takeover */
+function pauseDemo() { demoPaused = true; }
+function resumeDemo() { clearTimeout(demoTimer); demoTimer = setTimeout(() => { demoPaused = false; input.value = ""; }, 3000); }
+input.addEventListener("focus", pauseDemo);
+input.addEventListener("blur", resumeDemo);
+input.addEventListener("input", () => {
+  const q = input.value.trim().toLowerCase();
+  aiAnswer.style.display = "none"; listEl.style.display = "";
+  if (!q) return renderRows([]);
+  const matches = ALL_ACTIONS.filter((a) => a[1].toLowerCase().includes(q)).slice(0, 7);
+  renderRows(matches.map((m) => [m[0], m[1], m[2], []]));
+  setHighlight(matches.length ? 0 : null);
+});
+let selIdx = 0;
+document.addEventListener("keydown", (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); input.focus(); return; }
+  if (document.activeElement !== input) return;
+  const rows = [...listEl.querySelectorAll("li")];
+  if (e.key === "ArrowDown") { e.preventDefault(); selIdx = Math.min(selIdx + 1, rows.length - 1); setHighlight(selIdx); }
+  if (e.key === "ArrowUp") { e.preventDefault(); selIdx = Math.max(selIdx - 1, 0); setHighlight(selIdx); }
+  if (e.key === "Escape") { input.blur(); }
+  if (e.key === "Enter") { rows[selIdx]?.classList.add("flash"); toastText.textContent = "Done"; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"), 1200); }
+});
+
+/* ================= pillars scroll reveal ================= */
+document.querySelectorAll(".pillar").forEach((el, i) => {
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { setTimeout(() => el.classList.add("in"), i * 120); io.disconnect(); } }), { threshold: 0.3 });
+  io.observe(el);
+});
+
+/* ================= shortcut wall ================= */
+const SHORTCUTS = [
+  ["⌘K","Open palette"],["⌘J","Ask AI"],["⌘N","New doc"],["⌘F","Find"],["⌘⇧P","Command"],["⌘/","Shortcuts"],
+  ["⌘S","Save"],["⌘E","Export"],["⌘⇧D","Deploy"],["⌘.","Automations"],["⌘,","Settings"],["⌘⇧K","New window"],
+  ["⌘1","Docs tab"],["⌘2","Chat tab"],["⌘3","Calendar"],["⌘B","Sidebar"],["⌘⇧F","Global find"],["⌘⏎","Run"],
+  ["⌘Z","Undo"],["⌘⇧Z","Redo"],["⌘L","Jump to link"],["⌘⇧A","Automate"],["⌘I","Invite"],["⌘⇧S","Share"],
+];
+const grid = document.getElementById("keycapGrid");
+const caption = document.getElementById("wallCaption");
+SHORTCUTS.forEach(([k, action]) => {
+  const el = document.createElement("div");
+  el.className = "keycap"; el.textContent = k;
+  el.addEventListener("mouseenter", () => { el.classList.add("press"); caption.innerHTML = `<b>${k}</b> · ${action}`; });
+  el.addEventListener("mouseleave", () => { el.classList.remove("press"); });
+  grid.appendChild(el);
+});
+setInterval(() => {
+  if (paused) return;
+  const caps = [...grid.children]; const c = caps[Math.floor(Math.random() * caps.length)];
+  c.classList.add("glow"); setTimeout(() => c.classList.remove("glow"), 700);
+}, 900);
+
+/* ================= extensions gallery ================= */
+const EXT = [
+  ["DF","Design files","82k","Preview and comment on files inline."], ["TC","Team chat","210k","Search and send without switching."],
+  ["CR","Code review","190k","Open pull requests, issues and diffs instantly."], ["WK","Wiki","140k","Search every page and database."],
+  ["IT","Issue tracker","98k","Create and triage issues by voice."], ["VC","Video calls","61k","Jump straight into any meeting."],
+  ["FS","File storage","132k","Find any file before you finish typing."], ["SB","Sprint board","77k","Move tickets without opening the board."],
+  ["PY","Payments","44k","Look up a charge or customer fast."], ["CM","CRM","39k","Pull up a contact mid-call."],
+];
+const COLORS = ["#3b5bff","#ffb020","#151515","#3b5bff","#ffb020"];
+const extRow = document.getElementById("extRow");
+EXT.forEach(([mono, name, installs, desc], i) => {
+  const c = document.createElement("div");
+  c.className = "ext-card";
+  c.innerHTML = `<div class="ext-mono" style="background:${COLORS[i % COLORS.length]}">${mono}</div><h4>${name}</h4><div class="installs mono">${installs} installs</div><p>${desc}</p>`;
+  extRow.appendChild(c);
+});
+let dragging = false, sx = 0, sl = 0;
+extRow.addEventListener("pointerdown", (e) => { dragging = true; sx = e.clientX; sl = extRow.scrollLeft; extRow.style.cursor = "grabbing"; });
+addEventListener("pointerup", () => { dragging = false; extRow.style.cursor = "grab"; });
+addEventListener("pointermove", (e) => { if (dragging) extRow.scrollLeft = sl - (e.clientX - sx); });
+</script>
+</body>
+</html>

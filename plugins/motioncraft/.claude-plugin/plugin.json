@@ -1,0 +1,30 @@
+{
+  "name": "motioncraft",
+  "displayName": "RegesCore AI · MotionCraft Skills",
+  "version": "1.0.0",
+  "description": "Build, review and measure cinematic motion websites: a craft workflow with 26 technique recipes, a rubric and QA scripts for desktop and phone, and frame-time analytics with reference grading. Vanilla JavaScript and three.js 0.170, no build step.",
+  "author": {
+    "name": "LIKE A KING INC.",
+    "url": "https://likeakinginc.com"
+  },
+  "homepage": "https://animatedwebs.com",
+  "repository": "https://github.com/iboss21/regescore-motioncraft-skills",
+  "license": "MIT",
+  "keywords": [
+    "motion design",
+    "animation",
+    "webgl",
+    "threejs",
+    "scroll animation",
+    "landing page",
+    "web design",
+    "creative coding",
+    "shaders",
+    "accessibility",
+    "performance",
+    "design review",
+    "qa",
+    "skills",
+    "animatedwebs"
+  ]
+}

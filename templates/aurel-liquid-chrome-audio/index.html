@@ -1,0 +1,525 @@
+<!doctype html>
+<!--
+  Aurel Liquid Chrome Audio: a free template by AnimatedWebs (https://animatedwebs.com/templates/aurel-liquid-chrome-audio)
+  Copyright 2026 LIKE A KING INC. Free for personal and commercial websites, including client work.
+  Do not resell or redistribute it as a template. Full terms: templates/LICENSE.md in the MotionCraft Skills repo.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurel · Sound, poured in mercury</title>
+<meta name="description" content="Aurel Model 01: wireless headphones cast in liquid chrome. A fictional brand site with a raymarched mercury hero.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090b; --bg2:#101013; --ink:#f1ede4; --mute:#a9a69e; --line:rgba(241,237,228,.12);
+  --accent:#e6d3a8; --glass:rgba(22,22,26,.55);
+  --serif:'Instrument Serif',Georgia,serif; --sans:'Hanken Grotesk',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:#111;padding:10px 16px;z-index:100;border-radius:8px}
+.skip:focus{left:8px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.wrap{width:min(1240px,100% - 48px);margin-inline:auto}
+
+/* nav */
+header.nav{position:fixed;inset:16px 0 auto;z-index:50;pointer-events:none}
+.nav-in{pointer-events:auto;width:min(1240px,100% - 32px);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 12px 10px 24px;border:1px solid var(--line);border-radius:999px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3)}
+.logo{font-family:var(--serif);font-size:26px;letter-spacing:.32em;text-transform:uppercase;padding-left:.32em}
+.nav ul{display:flex;gap:34px;list-style:none}
+.nav ul a{font-size:14px;color:var(--mute);transition:color .3s}
+.nav ul a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 26px;border-radius:999px;font-weight:500;font-size:15px;border:1px solid var(--line);transition:transform .5s var(--ease),background .3s,color .3s;cursor:pointer;font-family:inherit}
+.btn.solid{background:var(--accent);color:#14120c;border-color:transparent}
+.btn.solid:hover{transform:translateY(-2px);background:#f3e3bb}
+.btn.ghost{background:rgba(255,255,255,.04);color:var(--ink)}
+.btn.ghost:hover{background:rgba(255,255,255,.1)}
+.nav .btn{padding:10px 20px;font-size:14px}
+.nav .logo{display:inline-flex;align-items:center;min-height:44px}
+.nav-end{display:flex;align-items:center;gap:10px}
+/* pause control: stops the chrome, the hint loop and every other ambient motion */
+.pause{display:inline-grid;place-items:center;width:44px;height:44px;flex:none;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);cursor:pointer;transition:background .3s}
+.pause:hover{background:rgba(255,255,255,.1)}
+.pause svg{width:14px;height:14px;fill:currentColor}
+.pause .i-play,.pause[aria-pressed="true"] .i-pause{display:none}
+.pause[aria-pressed="true"] .i-play{display:block}
+.still *,.still *::before,.still *::after{animation-play-state:paused!important}
+
+/* hero */
+.hero{position:relative;height:100vh;min-height:680px;overflow:hidden;display:flex;align-items:flex-end;isolation:isolate}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:-1}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(5,6,10,.8) 0,rgba(5,6,10,.5) 38%,rgba(5,6,10,0) 70%),linear-gradient(0deg,rgba(5,6,10,.7),transparent 35%);pointer-events:none}
+.hero-copy{padding-bottom:clamp(48px,9vh,96px);position:relative;max-width:760px}
+.eyebrow{color:var(--accent);margin-bottom:22px;display:flex;align-items:center;gap:14px}
+.eyebrow::before{content:"";width:36px;height:1px;background:var(--accent)}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(54px,8.6vw,132px);line-height:.92;letter-spacing:-.025em}
+h1 em{font-style:italic;color:var(--accent)}
+.hero-sub{margin-top:26px;max-width:480px;color:#cfccc3;font-size:18px}
+.hero-cta{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap}
+.hero-hint{position:absolute;right:24px;bottom:clamp(48px,9vh,96px);text-align:right;color:var(--mute);display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.hero-hint i{display:block;width:1px;height:48px;background:linear-gradient(var(--accent),transparent);transform-origin:top;animation:hint 1.6s ease-in-out infinite}
+@keyframes hint{0%{transform:scaleY(0)}60%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+.word{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em}
+.word>span{display:inline-block;transform:translateY(105%);animation:rise 1.1s var(--ease) forwards;animation-delay:calc(var(--i)*80ms + 250ms)}
+@keyframes rise{to{transform:none}}
+.fade-up{opacity:0;transform:translateY(24px);animation:fu 1s var(--ease) forwards;animation-delay:900ms}
+@keyframes fu{to{opacity:1;transform:none}}
+
+/* sections */
+section{position:relative}
+.sec{padding:clamp(96px,14vw,180px) 0}
+.sec-head{display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:end;margin-bottom:72px}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.6vw,84px);line-height:1;letter-spacing:-.02em}
+h2 em{font-style:italic;color:var(--accent)}
+.lead{color:var(--mute);max-width:560px}
+.rv{opacity:0;transform:translateY(36px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease);transition-delay:var(--d,0ms)}
+.rv.in{opacity:1;transform:none}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{padding:34px 30px 38px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012));backdrop-filter:blur(12px);transition:transform .7s var(--ease),border-color .4s}
+.card:hover{transform:translateY(-6px);border-color:rgba(230,211,168,.4)}
+.card .num{color:var(--accent);margin-bottom:56px;display:block}
+.card h3{font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.05;margin-bottom:14px}
+.card p{color:var(--mute);font-size:16px}
+
+/* specs */
+.specs{background:var(--bg2);border-block:1px solid var(--line);overflow:hidden}
+.spec-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(32px,6vw,96px);align-items:center}
+.phones{position:relative;aspect-ratio:1;max-width:560px;width:100%;margin-inline:auto}
+.phones svg{width:100%;height:100%;overflow:visible}
+.phones .halo{position:absolute;inset:8%;border-radius:50%;background:radial-gradient(circle,rgba(230,211,168,.18),transparent 65%);filter:blur(30px)}
+.stat-list{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden;margin-top:40px}
+.stat{background:var(--bg2);padding:26px 24px}
+.stat b{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(44px,5vw,68px);line-height:1;color:var(--ink)}
+.stat b small{font-size:.45em;color:var(--accent);margin-left:4px;font-family:var(--sans)}
+.stat span{display:block;margin-top:8px;color:var(--mute);font-size:14px}
+
+/* craft */
+.steps{list-style:none;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:120px 1fr 1.2fr;gap:32px;align-items:baseline;padding:38px 0;border-bottom:1px solid var(--line);transition:padding .6s var(--ease),background .4s}
+.step:hover{padding-left:18px;background:linear-gradient(90deg,rgba(230,211,168,.06),transparent)}
+.step .n{font-family:var(--serif);font-size:56px;color:var(--accent);line-height:1}
+.step h3{font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.05}
+.step p{color:var(--mute)}
+
+/* press */
+.press{background:radial-gradient(900px 400px at 50% 0,rgba(230,211,168,.07),transparent 70%),var(--bg)}
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+blockquote{padding:34px 30px;border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.025)}
+blockquote p{font-family:var(--serif);font-size:27px;line-height:1.2;margin-bottom:26px}
+blockquote footer{color:var(--mute)}
+
+/* cta */
+.cta{text-align:center;border-top:1px solid var(--line);overflow:hidden}
+.cta h2{font-size:clamp(52px,8vw,128px);max-width:14ch;margin:0 auto}
+.cta p{color:var(--mute);margin:26px auto 40px;max-width:480px}
+.form{display:flex;gap:8px;max-width:520px;margin:0 auto;padding:8px;border:1px solid var(--line);border-radius:999px;background:var(--glass);backdrop-filter:blur(16px)}
+.form input{flex:1;min-width:0;background:transparent;border:0;color:var(--ink);font:inherit;padding:0 20px;outline:none}
+.form input::placeholder{color:#8f8c85}
+.form:focus-within{border-color:var(--accent)}
+.note{margin-top:18px;color:var(--mute);min-height:24px;font-size:14px}
+
+footer.site{border-top:1px solid var(--line);padding:56px 0 40px;color:var(--mute);font-size:14px}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.foot .logo{color:var(--ink);display:block;margin-bottom:14px}
+.foot h4{font-weight:500;color:var(--ink);margin-bottom:14px;font-size:14px}
+.foot ul{list-style:none;display:grid;gap:8px}
+.foot a:hover{color:var(--ink)}
+.legal{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:900px){
+  .nav ul{display:none}
+  .sec-head,.spec-grid{grid-template-columns:1fr;gap:28px}
+  .cards,.quotes{grid-template-columns:1fr}
+  .step{grid-template-columns:64px 1fr;gap:12px 20px}
+  .step p{grid-column:2}
+  .step .n{font-size:40px}
+  .foot{grid-template-columns:1fr 1fr}
+  .hero-hint{display:none}
+  .hero{align-items:flex-end}
+  .hero-sub{font-size:16px}
+  .foot .logo{display:inline-flex;align-items:center;min-height:44px;margin-bottom:6px}
+  .foot ul{gap:0}
+  .foot ul a{display:inline-flex;align-items:center;min-height:44px;min-width:44px}
+}
+@media (max-width:520px){ .wrap{width:calc(100% - 32px)} .form{flex-direction:column;border-radius:28px;padding:10px} .form input{padding:14px 16px} .stat-list{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  .word>span,.fade-up{animation:none;transform:none;opacity:1}
+  .hero-hint i{animation:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav">
+  <nav class="nav-in" aria-label="Primary">
+    <a class="logo" href="#top" aria-label="Aurel home">Aurel</a>
+    <ul>
+      <li><a href="#material">Material</a></li>
+      <li><a href="#sound">Sound</a></li>
+      <li><a href="#craft">Craft</a></li>
+      <li><a href="#press">Press</a></li>
+    </ul>
+    <div class="nav-end">
+      <button class="pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion" title="Pause motion">
+        <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg>
+        <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l8 5-8 5z"/></svg>
+      </button>
+      <a class="btn solid" href="#reserve">Reserve</a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+<section class="hero" id="top" aria-labelledby="h1">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="wrap" style="width:min(1240px,100% - 48px)">
+    <div class="hero-copy">
+      <p class="eyebrow mono fade-up">Aurel Model 01 &middot; Liquid Chrome Edition</p>
+      <h1 id="h1" aria-label="Sound, poured in mercury.">
+        <span class="word" style="--i:0"><span>Sound,</span></span>
+        <span class="word" style="--i:1"><span>poured</span></span>
+        <span class="word" style="--i:2"><span>in</span></span><br>
+        <span class="word" style="--i:3"><span><em>mercury.</em></span></span>
+      </h1>
+      <p class="hero-sub fade-up">Wireless headphones cast from a single pour of polished alloy, tuned by ear in a quiet room in Portland.</p>
+      <div class="hero-cta fade-up">
+        <a class="btn solid" href="#reserve">Reserve a pair</a>
+        <a class="btn ghost" href="#sound">Hear the details</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-hint mono fade-up" aria-hidden="true"><span>Move closer, the metal follows</span><i></i></div>
+</section>
+
+<section class="sec" id="material" aria-labelledby="h-material">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="mono rv" style="color:var(--accent)">01 &middot; The material</p>
+      <h2 id="h-material" class="rv">A surface that behaves like a <em>liquid.</em></h2>
+    </div>
+    <div class="cards">
+      <article class="card rv"><span class="num mono">Alloy &middot; 316L</span><h3>Cast, never stamped</h3><p>Each cup is poured as one piece of marine-grade steel, then polished through fourteen stages until it holds a reflection like still mercury.</p></article>
+      <article class="card rv" style="--d:120ms"><span class="num mono">Cushion &middot; Memory</span><h3>Quiet on the skin</h3><p>Slow-recovery foam wrapped in plant-tanned leather. Two hours in, you forget they are there; four hours in, you are still comfortable.</p></article>
+      <article class="card rv" style="--d:240ms"><span class="num mono">Hinge &middot; Titanium</span><h3>Twelve thousand folds</h3><p>A floating titanium yoke was cycled twelve thousand times in our test rig. It folds flat into a case no thicker than a paperback.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="sec specs" id="sound" aria-labelledby="h-sound">
+  <div class="wrap spec-grid">
+    <div class="phones rv" aria-hidden="true">
+      <div class="halo"></div>
+      <svg viewBox="0 0 400 400" role="img" focusable="false">
+        <defs>
+          <linearGradient id="chrome" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#2a2a2f"/><stop offset=".22" stop-color="#e9e6df"/><stop offset=".4" stop-color="#5b5b62"/><stop offset=".62" stop-color="#f6f2e8"/><stop offset=".8" stop-color="#3a3a40"/><stop offset="1" stop-color="#b9b4a6"/>
+          </linearGradient>
+          <linearGradient id="band" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1ede4"/><stop offset=".5" stop-color="#6c6a66"/><stop offset="1" stop-color="#cbc6b8"/></linearGradient>
+          <radialGradient id="cup" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fffdf6"/><stop offset=".25" stop-color="#bdb9ae"/><stop offset=".55" stop-color="#2a2a2e"/><stop offset=".8" stop-color="#77746c"/><stop offset="1" stop-color="#16161a"/></radialGradient>
+        </defs>
+        <path d="M70 230 C70 90 120 44 200 44 C280 44 330 90 330 230" fill="none" stroke="url(#band)" stroke-width="16" stroke-linecap="round"/>
+        <path d="M86 226 C88 112 130 66 200 66 C270 66 312 112 314 226" fill="none" stroke="rgba(0,0,0,.45)" stroke-width="3"/>
+        <g>
+          <rect x="38" y="190" width="74" height="150" rx="37" fill="url(#cup)"/>
+          <rect x="38" y="190" width="74" height="150" rx="37" fill="none" stroke="url(#chrome)" stroke-width="3"/>
+          <ellipse cx="62" cy="238" rx="9" ry="26" fill="#fff" opacity=".5"/>
+          <rect x="288" y="190" width="74" height="150" rx="37" fill="url(#cup)"/>
+          <rect x="288" y="190" width="74" height="150" rx="37" fill="none" stroke="url(#chrome)" stroke-width="3"/>
+          <ellipse cx="312" cy="238" rx="9" ry="26" fill="#fff" opacity=".5"/>
+        </g>
+      </svg>
+    </div>
+    <div>
+      <p class="mono rv" style="color:var(--accent);margin-bottom:20px">02 &middot; The sound</p>
+      <h2 id="h-sound" class="rv">Forty millimeters of <em>stillness.</em></h2>
+      <p class="lead rv" style="margin-top:22px">Beryllium-coated drivers, a tuned acoustic chamber and adaptive noise canceling that listens to your room four thousand times a second.</p>
+      <div class="stat-list rv" role="list">
+        <div class="stat" role="listitem"><b data-count="40">0<small>mm</small></b><span>Beryllium-coated driver</span></div>
+        <div class="stat" role="listitem"><b data-count="60">0<small>hrs</small></b><span>Battery with ANC on</span></div>
+        <div class="stat" role="listitem"><b data-count="6">0<small>mics</small></b><span>Adaptive noise canceling</span></div>
+        <div class="stat" role="listitem"><b data-count="14">0<small>steps</small></b><span>Hand polishing per cup</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="craft" aria-labelledby="h-craft">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="mono rv" style="color:var(--accent)">03 &middot; The craft</p>
+      <h2 id="h-craft" class="rv">From molten pour to <em>mirror finish.</em></h2>
+    </div>
+    <ol class="steps">
+      <li class="step rv"><span class="n">i</span><h3>The pour</h3><p>Steel is cast at 2,800 degrees Fahrenheit into a ceramic shell. One pour, one cup, no seams to hide.</p></li>
+      <li class="step rv"><span class="n">ii</span><h3>The grind</h3><p>Fourteen abrasives, each finer than the last, remove every trace of the one before it.</p></li>
+      <li class="step rv"><span class="n">iii</span><h3>The tune</h3><p>Every pair is measured against a reference curve and trimmed by a listener, not a script.</p></li>
+      <li class="step rv"><span class="n">iv</span><h3>The reveal</h3><p>Final buffing with cerium oxide until the cup reflects the room back, soft and exact.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec press" id="press" aria-labelledby="h-press">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="mono rv" style="color:var(--accent)">04 &middot; Early listeners</p>
+      <h2 id="h-press" class="rv">Heard, and then <em>seen.</em></h2>
+    </div>
+    <div class="quotes">
+      <blockquote class="rv"><p>&ldquo;The first headphones I have wanted to leave on the desk, just to look at.&rdquo;</p><footer class="mono">The Quiet Review</footer></blockquote>
+      <blockquote class="rv" style="--d:120ms"><p>&ldquo;Warm low end, a very calm top. Nothing shouts, everything is there.&rdquo;</p><footer class="mono">Listening Room Weekly</footer></blockquote>
+      <blockquote class="rv" style="--d:240ms"><p>&ldquo;Noise canceling that feels like closing a heavy door in a stone house.&rdquo;</p><footer class="mono">Atelier Sound Journal</footer></blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="sec cta" id="reserve" aria-labelledby="h-cta">
+  <div class="wrap">
+    <p class="mono rv" style="color:var(--accent);margin-bottom:22px">Limited first run &middot; 1,200 pairs</p>
+    <h2 id="h-cta" class="rv">Reserve your pair in <em>chrome.</em></h2>
+    <p class="rv">Leave your email and we will write when the first run opens. No deposit, no spam.</p>
+    <form class="form rv" id="reserveForm" novalidate>
+      <label for="email" style="position:absolute;left:-999px">Email address</label>
+      <input id="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+      <button class="btn solid" type="submit">Notify me</button>
+    </form>
+    <p class="note" id="note" role="status" aria-live="polite"></p>
+  </div>
+</section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot">
+      <div><a class="logo" href="#top">Aurel</a><p>Wireless headphones in liquid chrome.<br>Designed in Portland.</p></div>
+      <div><h4>Product</h4><ul><li><a href="#material">Material</a></li><li><a href="#sound">Sound</a></li><li><a href="#craft">Craft</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#press">Press</a></li><li><a href="#reserve">Reserve</a></li><li><a href="#top">Careers</a></li></ul></div>
+      <div><h4>Support</h4><ul><li><a href="#top">Warranty</a></li><li><a href="#top">Care guide</a></li><li><a href="#top">Contact</a></li></ul></div>
+    </div>
+    <div class="legal"><span>&copy; 2026 Aurel Audio. Fictional brand. Template by <a href="https://animatedwebs.com">AnimatedWebs</a>.</span><span class="mono">Cast &middot; Polished &middot; Tuned</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var $ = function(s,c){return (c||document).querySelector(s)};
+
+/* ---------- reveals + counters ---------- */
+/* Reveals are a pure function of scroll position, read from layout offsets that ignore the hidden-state
+   transform, so scrolling back up undoes them exactly. Everything shows once the page reaches its end. */
+function revealByScroll(els, enterAt){
+  var tops = [];
+  function update(){
+    var line = scrollY + innerHeight * enterAt, end = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+    for (var i = 0; i < els.length; i++) els[i].classList.toggle('in', end || tops[i] < line);
+  }
+  function measure(){
+    tops = els.map(function(el){ var y = 0; for (var n = el; n; n = n.offsetParent) y += n.offsetTop; return y; });
+    update();
+  }
+  addEventListener('scroll', update, {passive:true});
+  addEventListener('resize', measure);
+  addEventListener('load', measure);
+  if (document.fonts) document.fonts.ready.then(measure);
+  measure();
+}
+var rvs = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+if (reduce) rvs.forEach(function(e){e.classList.add('in')});
+else revealByScroll(rvs, .88);
+function countUp(el){
+  var target = +el.dataset.count, small = el.querySelector('small'), unit = small ? small.outerHTML : '';
+  if (reduce) { el.innerHTML = target + unit; return; }
+  var t0 = performance.now(), dur = 1400;
+  (function tick(now){
+    var p = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-p,3);
+    el.innerHTML = Math.round(target*e) + unit;
+    if (p<1) requestAnimationFrame(tick);
+  })(t0);
+}
+var cio = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ countUp(e.target); cio.unobserve(e.target);} }); }, {threshold:.4});
+document.querySelectorAll('[data-count]').forEach(function(e){ if(reduce){countUp(e)} else cio.observe(e) });
+
+$('#reserveForm').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  var v = $('#email').value.trim(), note = $('#note');
+  note.textContent = /^\S+@\S+\.\S+$/.test(v) ? 'Thank you. You are on the list for the first run.' : 'Please enter a valid email address.';
+});
+
+/* ---------- pause control: one flag that every moving part reads ---------- */
+/* Starts pressed when the OS asks for reduced motion, so a visitor can still opt in. */
+var paused = reduce, onPause = [], pauseBtn = $('#pause');
+function setPaused(p){
+  paused = p;
+  pauseBtn.setAttribute('aria-pressed', String(p));
+  document.documentElement.classList.toggle('still', p);
+  onPause.forEach(function(fn){ fn(p); });
+}
+pauseBtn.addEventListener('click', function(){ setPaused(!paused); });
+setPaused(paused);
+
+/* ---------- liquid chrome (raw WebGL2, raymarched metaballs) ---------- */
+var canvas = $('#gl');
+var gl = canvas.getContext('webgl2', {antialias:false, alpha:false, powerPreference:'high-performance'});
+if (!gl) { canvas.style.background = 'radial-gradient(60% 60% at 62% 50%, #3b3a3d, #09090b 70%)'; return; }
+
+var VS = '#version 300 es\nvoid main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);gl_Position=vec4(p*2.-1.,0.,1.);}';
+var FS = '#version 300 es\nprecision highp float;\n' +
+'uniform vec2 uRes; uniform float uTime; uniform vec4 uB[6]; uniform float uCenter; uniform int uSteps; uniform float uScroll; uniform vec3 uMouse;\n' +
+'out vec4 o;\n' +
+'float smin(float a,float b,float k){float h=max(k-abs(a-b),0.)/k;return min(a,b)-h*h*k*.25;}\n' +
+'float map(vec3 p){float d=1e5;for(int i=0;i<6;i++){d=smin(d,length(p-uB[i].xyz)-uB[i].w,.85);}\n' +
+'  d+=.014*sin(p.x*7.+uTime*1.1)*sin(p.y*6.-uTime*.9)*sin(p.z*7.+uTime*.7);return d;}\n' +
+'vec3 nrm(vec3 p){vec2 e=vec2(1.,-1.)*.003;return normalize(e.xyy*map(p+e.xyy)+e.yyx*map(p+e.yyx)+e.yxy*map(p+e.yxy)+e.xxx*map(p+e.xxx));}\n' +
+/* procedural studio environment: deep navy room, hard softboxes, gold bounce, sharp horizon */
+'vec3 env(vec3 d){\n' +
+'  float y=d.y; float az=atan(d.x,d.z);\n' +
+'  vec3 c=mix(vec3(.006,.006,.01),vec3(.2,.2,.23),smoothstep(-.1,1.,y));\n' +
+'  float win=smoothstep(.3,.55,sin(az*2.6+.8))*smoothstep(.3,.55,sin(y*6.5-.4));\n' +
+'  c+=vec3(1.,.97,.92)*win*step(-.05,y)*2.8;\n' +
+'  c+=vec3(1.,.93,.82)*smoothstep(.05,.0,abs(y+.03))*2.2;\n' +
+'  float top=smoothstep(.62,.7,y)*smoothstep(1.,.95,y);\n' +
+'  c+=vec3(1.,.98,.95)*top*5.;\n' +
+'  float s1=smoothstep(.07,.03,abs(az-2.2))*smoothstep(-.5,-.3,y)*smoothstep(.9,.7,y);\n' +
+'  c+=vec3(1.,.74,.4)*s1*4.;\n' +
+'  float s2=smoothstep(.05,.02,abs(az+.6))*smoothstep(-.5,-.3,y)*smoothstep(.9,.7,y);\n' +
+'  c+=vec3(.7,.85,1.)*s2*3.5;\n' +
+'  float fl=smoothstep(0.,-.9,y);\n' +
+'  c=mix(c,vec3(.03,.03,.04)+vec3(.55,.5,.42)*pow(max(0.,1.+y*1.3),3.)*(.5+.5*sin(az*9.)),fl*.85);\n' +
+'  return c;}\n' +
+'void main(){\n' +
+'  vec2 uv=(gl_FragCoord.xy-.5*uRes)/uRes.y*2.; uv.x-=uCenter;\n' +
+'  vec3 ro=vec3(0.,0.,5.), rd=normalize(vec3(uv,-1.6));\n' +
+'  float t=2.2, d, md=1e3; bool hit=false; vec3 p;\n' +
+'  for(int i=0;i<64;i++){ if(i>=uSteps)break; p=ro+rd*t; d=map(p); md=min(md,d); if(d<.0015){hit=true;break;} t+=d*.9; if(t>9.)break; }\n' +
+'  vec3 col;\n' +
+'  vec2 q=gl_FragCoord.xy/uRes;\n' +
+'  vec3 bg=env(rd)*.12+vec3(.012,.014,.022);\n' +
+'  bg+=vec3(.9,.78,.5)*exp(-md*2.2)*.1*(1.-uScroll*.6);\n' +
+'  if(hit){\n' +
+'    vec3 n=nrm(p);\n' +
+'    float rl=length(p.xy-uMouse.xy);\n' +
+'    n=normalize(n+vec3(normalize(p.xy-uMouse.xy+1e-4)*sin(rl*11.-uTime*5.)*exp(-rl*.9)*.14*uMouse.z,0.)+.05*vec3(sin(p.y*9.+uTime*1.2),sin(p.z*8.-uTime),sin(p.x*10.+uTime*.8)));\n' +
+'    float ndv=clamp(dot(n,-rd),0.,1.);\n' +
+'    float fr=pow(1.-ndv,4.);\n' +
+'    vec3 r=reflect(rd,n);\n' +
+'    vec3 e0=env(r);\n' +
+'    vec3 ca=vec3(env(reflect(rd,normalize(n+vec3(.026,.0,.0)))).r, e0.g, env(reflect(rd,normalize(n-vec3(.026,.0,.0)))).b);\n' +
+'    vec3 tint=mix(vec3(.93,.94,.97),vec3(1.,.9,.74),.25+.35*fr);\n' +
+'    col=ca*tint*(.85+.6*fr);\n' +
+'    float ao=clamp(map(p+n*.4)/.4,.2,1.);\n' +
+'    col*=mix(.45,1.,ao);\n' +
+'    col+=pow(max(dot(r,normalize(vec3(-.5,.8,.6))),0.),70.)*.8;\n' +
+'  } else col=bg;\n' +
+'  col*=1.-.4*dot(q-.5,q-.5)*2.2;\n' +
+'  col=col*(2.51*col+.03)/(col*(2.43*col+.59)+.14);\n' +
+'  col=pow(col,vec3(1./2.2));\n' +
+'  col+=(fract(sin(dot(gl_FragCoord.xy+uTime,vec2(12.9898,78.233)))*43758.5453)-.5)*.022;\n' +
+'  o=vec4(col,1.);}';
+
+function sh(type, src){ var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){ console.warn(gl.getShaderInfoLog(s)); } return s; }
+var prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER,VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER,FS)); gl.linkProgram(prog);
+if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.style.background = 'radial-gradient(60% 60% at 62% 50%, #3b3a3d, #09090b 70%)'; return; }
+gl.useProgram(prog);
+var U = {}; ['uRes','uTime','uB','uCenter','uSteps','uScroll','uMouse'].forEach(function(n){U[n]=gl.getUniformLocation(prog,n)});
+gl.bindVertexArray(gl.createVertexArray());
+
+var quality = innerWidth < 768 ? .5 : .8, minQ = .42, maxQ = innerWidth < 768 ? .6 : 1;
+var mouse = {x:0,y:0,tx:0,ty:0,seen:false}, kick = 0, scrollP = 0;
+var W=0,H=0;
+function resize(){
+  var dprCap = innerWidth < 768 ? 1.5 : 2, dpr = Math.min(devicePixelRatio||1, dprCap);
+  var w = canvas.clientWidth, h = canvas.clientHeight;
+  var s = dpr*quality;
+  W = Math.max(2,Math.round(w*s)); H = Math.max(2,Math.round(h*s));
+  if (canvas.width!==W||canvas.height!==H){ canvas.width=W; canvas.height=H; }
+  gl.viewport(0,0,W,H);
+}
+addEventListener('resize', function(){ resize(); if(!running) draw(tAbs); });
+
+addEventListener('pointermove', function(e){
+  var r = canvas.getBoundingClientRect();
+  mouse.tx = (e.clientX - r.left)/r.width; mouse.ty = 1-(e.clientY - r.top)/r.height; mouse.seen = true;
+}, {passive:true});
+canvas.parentElement.addEventListener('pointerdown', function(e){ if(!e.target.closest('a,button')) kick = 1; });
+addEventListener('scroll', function(){
+  scrollP = Math.min(1, Math.max(0, scrollY/(innerHeight*.9)));
+  if (!running && visible) draw(tAbs);   /* paused or reduced: the pour still follows the scroll */
+}, {passive:true});
+
+var blobs = new Float32Array(24);
+var R = [1.1,.86,.78,.66,.56,.46];
+var cur = {x:0,y:0};
+function simulate(t, dt){
+  var asp = canvas.clientWidth/canvas.clientHeight, mobile = innerWidth<768;
+  var center = mobile ? 0 : Math.min(.62*asp, 1.1);           /* scene offset in uv units */
+  var spread = (1 - .8*scrollP*scrollP*(3-2*scrollP)) * (.78 + .22*Math.sin(t*.42));
+  kick *= Math.pow(.02, dt);                                 /* decays in ~1.2 s */
+  spread *= 1 + kick*1.1;
+  var mx, my;
+  if (mouse.seen){ mx = (mouse.tx-.5)*2*asp; my = (mouse.ty-.5)*2; }
+  else { mx = Math.sin(t*.5)*.7*asp*.5; my = Math.cos(t*.37)*.4; }       /* autonomous when idle */
+  var wx = (mx - center)*3.125, wy = my*3.125;
+  var lim = 2.7, m = Math.hypot(wx,wy); if (m>lim){ wx*=lim/m; wy*=lim/m; }
+  var k = 1-Math.pow(.0009, dt);
+  cur.x += (wx-cur.x)*k; cur.y += (wy-cur.y)*k;
+  var sc = mobile ? .72 : 1;
+  for (var i=0;i<6;i++){
+    var ph = i*1.37, a = (1.0+i*.22)*spread*sc, sp = .32+i*.07;
+    var x = Math.cos(t*sp+ph)*a*1.55, y = Math.sin(t*sp*1.21+ph*1.7)*a, z = Math.sin(t*sp*.8+ph)*.55*spread;
+    if (i===0){ x*=.25; y*=.25; z=0; }
+    if (i===1){ x = cur.x; y = cur.y; z = 0.1; }                       /* cursor-chasing blob */
+    if (i===2){ x = x*.6 + cur.x*.35; y = y*.6 + cur.y*.35; }          /* gravity from cursor */
+    if (i===3){ x = x*.8 + cur.x*.12; y = y*.8 + cur.y*.12; }
+    blobs[i*4]=x; blobs[i*4+1]=y; blobs[i*4+2]=z; blobs[i*4+3]=R[i]*sc*(1+.06*Math.sin(t*1.7+i));
+  }
+  /* center blob grows as the others merge into it while scrolling */
+  blobs[3+0] = R[0]*sc*(1+.9*scrollP);
+  return center;
+}
+
+var last = 0, running = false, visible = true, tAbs = 0, fpsAcc = 0, fpsN = 0, raf = 0;
+function draw(t){
+  var c = simulate(t, .016);
+  gl.uniform2f(U.uRes,W,H); gl.uniform1f(U.uTime,t); gl.uniform4fv(U.uB,blobs);
+  gl.uniform1f(U.uCenter,c); gl.uniform1i(U.uSteps, innerWidth<768 ? 34 : 60); gl.uniform1f(U.uScroll,scrollP); gl.uniform3f(U.uMouse,cur.x,cur.y,.6+kick*1.4);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+}
+function frame(now){
+  if (!running) return;
+  raf = requestAnimationFrame(frame);
+  var dt = Math.min(.05,(now-last)/1000||.016); last = now; tAbs += dt;
+  var c = simulate(tAbs, dt);
+  gl.uniform2f(U.uRes,W,H); gl.uniform1f(U.uTime,tAbs); gl.uniform4fv(U.uB,blobs);
+  gl.uniform1f(U.uCenter,c); gl.uniform1i(U.uSteps, innerWidth<768 ? 34 : 60); gl.uniform1f(U.uScroll,scrollP); gl.uniform3f(U.uMouse,cur.x,cur.y,.6+kick*1.4);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+  /* adaptive resolution: keep the frame under ~24 ms */
+  fpsAcc += dt; fpsN++;
+  if (fpsN===30){ var avg = fpsAcc/fpsN; fpsAcc=0; fpsN=0;
+    if (avg>.026 && quality>minQ){ quality=Math.max(minQ,quality-.1); resize(); }
+    else if (avg<.0185 && quality<maxQ){ quality=Math.min(maxQ,quality+.05); resize(); } }
+}
+function start(){ if(running||paused||!visible||document.hidden) return; running=true; last=performance.now(); raf = requestAnimationFrame(frame); }
+function stop(){ running=false; cancelAnimationFrame(raf); }
+resize();
+tAbs = reduce ? 7.3 : 0;   /* reduced motion opens on a composed still */
+draw(tAbs);
+new IntersectionObserver(function(es){ visible = es[0].isIntersecting; visible ? start() : stop(); }, {threshold:0}).observe(canvas);
+document.addEventListener('visibilitychange', function(){ document.hidden ? stop() : start(); });
+onPause.push(function(p){ p ? stop() : start(); });
+start();
+})();
+</script>
+</body>
+</html>

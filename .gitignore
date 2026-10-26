@@ -1,0 +1,13 @@
+# Local installs for the review scripts (npm i -D playwright sharp)
+node_modules/
+package.json
+package-lock.json
+
+# Script output
+qa/
+compare/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

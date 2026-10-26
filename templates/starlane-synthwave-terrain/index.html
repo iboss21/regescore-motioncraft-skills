@@ -1,0 +1,591 @@
+<!doctype html>
+<!--
+  Starlane Synthwave Terrain: a free template by AnimatedWebs (https://animatedwebs.com/templates/starlane-synthwave-terrain)
+  Copyright 2026 LIKE A KING INC. Free for personal and commercial websites, including client work.
+  Do not resell or redistribute it as a template. Full terms: templates/LICENSE.md in the MotionCraft Skills repo.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NIGHTLINE · Outrun the dawn · Starlane Arcade</title>
+<meta name="description" content="Nightline is an arcade night-racer with a synth soundtrack from Starlane Arcade. Coming to Steam 2027." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Tektur:wght@500;700;800;900&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root { --bg:#0a0014; --fg:#fdf0ff; --muted:rgba(253,240,255,.62); --dim:rgba(253,240,255,.38); --line:rgba(253,240,255,.12); --pink:#ff2e97; --cyan:#00f0ff; --sun:#ffd319; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { background:var(--bg); }
+  body { background:var(--bg); color:var(--fg); font:400 17px/1.6 "Chakra Petch", system-ui, sans-serif; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-decoration:none; }
+  button { font:inherit; color:inherit; }
+  ::selection { background:var(--pink); color:#fff; }
+  :focus-visible { outline:2px solid var(--cyan); outline-offset:3px; }
+  #gl { position:fixed; inset:0; width:100vw; height:100vh; display:block; z-index:0; }
+  .flicker { position:fixed; inset:0; z-index:1; pointer-events:none; background:#000; opacity:0; }
+  .mono { font:600 12px/1.4 "Chakra Petch"; letter-spacing:.24em; text-transform:uppercase; }
+  .wrap { max-width:1280px; margin:0 auto; padding:0 40px; }
+  main, footer, nav { position:relative; z-index:2; }
+
+  nav { position:fixed; top:0; left:0; right:0; z-index:30; display:flex; align-items:center; justify-content:space-between; padding:22px 40px; transition:background .4s, backdrop-filter .4s; }
+  nav.solid { background:rgba(10,0,20,.72); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+  .logo { display:flex; align-items:center; gap:12px; min-height:44px; font:800 16px/1 Tektur; letter-spacing:.16em; }
+  .logo svg { width:28px; height:28px; }
+  nav ul { display:flex; gap:34px; list-style:none; }
+  nav ul a { color:var(--muted); transition:color .25s, text-shadow .25s; }
+  nav ul a:hover { color:var(--cyan); text-shadow:0 0 12px var(--cyan); }
+
+  .neon { position:relative; display:inline-flex; align-items:center; gap:12px; height:56px; padding:0 30px; border-radius:999px; font:700 15px/1 "Chakra Petch"; letter-spacing:.18em; text-transform:uppercase; background:rgba(10,0,20,.55); isolation:isolate; cursor:pointer; border:0; transition:transform .3s cubic-bezier(.22,1,.36,1); }
+  .neon::before { content:""; position:absolute; inset:0; padding:2px; border-radius:inherit; background:conic-gradient(from var(--ang), var(--pink), var(--cyan), var(--sun), var(--pink)); -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; animation:spin 3s linear infinite; z-index:-1; }
+  .neon::after { content:""; position:absolute; inset:-8px; border-radius:inherit; background:conic-gradient(from var(--ang), var(--pink), var(--cyan), var(--sun), var(--pink)); filter:blur(18px); opacity:.45; z-index:-2; animation:spin 3s linear infinite; }
+  .neon:hover { transform:translateY(-2px) scale(1.02); }
+  .neon.sm { height:44px; padding:0 20px; font-size:12px; }
+  @property --ang { syntax:"<angle>"; inherits:false; initial-value:0deg; }
+  @keyframes spin { to { --ang:360deg; } }
+  .wl { width:20px; height:20px; }
+  .nav-end { display:flex; align-items:center; gap:12px; }
+  /* pause control: stops the drive, the stars, the marquee and every CSS loop */
+  .pause { display:inline-grid; place-items:center; width:44px; height:44px; flex:none; border-radius:50%; border:1px solid var(--line); background:rgba(10,0,20,.55); color:var(--fg); cursor:pointer; transition:border-color .25s, box-shadow .25s; }
+  .pause:hover { border-color:var(--cyan); box-shadow:0 0 14px rgba(0,240,255,.45); }
+  .pause svg { width:14px; height:14px; fill:currentColor; }
+  .pause .i-play, .pause[aria-pressed="true"] .i-pause { display:none; }
+  .pause[aria-pressed="true"] .i-play { display:block; }
+  .still *, .still *::before, .still *::after { animation-play-state:paused !important; }
+
+  .hero { position:relative; height:100vh; min-height:640px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 20px; }
+  .hero .kicker { color:var(--cyan); text-shadow:0 0 12px rgba(0,240,255,.7); margin-bottom:18px; opacity:0; animation:fin .8s .3s forwards; }
+  h1 { font:900 clamp(56px, 12.4vw, 184px)/.9 Tektur; letter-spacing:.02em; text-transform:uppercase; transform:skewX(-8deg); background:linear-gradient(180deg, #fdf0ff 0%, #fdf0ff 38%, #00f0ff 52%, #1a0930 53%, #ff2e97 70%, #ffd319 100%); background-size:100% 200%; -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 1px rgba(255,255,255,.6)) drop-shadow(0 6px 0 #1b0033) drop-shadow(0 0 34px rgba(255,46,151,.55)); animation:chrome 6s linear infinite, slam 1.1s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes chrome { 0% { background-position:0 0 } 50% { background-position:0 100% } 100% { background-position:0 0 } }
+  @keyframes slam { from { opacity:0; transform:skewX(-8deg) scale(1.3); letter-spacing:.3em; filter:blur(12px); } }
+  .hero .sub { font:500 clamp(17px, 1.6vw, 22px)/1.4 "Chakra Petch"; letter-spacing:.06em; margin:22px 0 34px; color:var(--fg); text-shadow:0 2px 20px #0a0014; opacity:0; animation:fin .8s .7s forwards; }
+  .hero .ctas { display:flex; gap:16px; align-items:center; flex-wrap:wrap; justify-content:center; opacity:0; animation:fin .8s .9s forwards; }
+  .txt { font:600 13px "Chakra Petch"; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); display:inline-flex; gap:10px; align-items:center; min-height:44px; }
+  .txt:hover { color:var(--fg); }
+  .hud { position:absolute; bottom:28px; left:40px; right:40px; display:flex; justify-content:space-between; color:var(--dim); }
+  .hud b { color:var(--cyan); font-weight:600; font-variant-numeric:tabular-nums; }
+  @keyframes fin { to { opacity:1; } }
+
+  .panel { background:linear-gradient(180deg, rgba(10,0,20,.0), rgba(10,0,20,.92) 12%, rgba(10,0,20,.96) 88%, rgba(10,0,20,.0)); }
+  section.block { padding:150px 0; position:relative; }
+  .sh { display:flex; justify-content:space-between; align-items:flex-end; gap:30px; margin-bottom:56px; }
+  .sh .mono { color:var(--pink); text-shadow:0 0 10px rgba(255,46,151,.6); display:block; margin-bottom:16px; }
+  h2 { font:800 clamp(40px, 5.6vw, 84px)/.92 Tektur; text-transform:uppercase; letter-spacing:.01em; transform:skewX(-8deg); }
+  h2 span { color:transparent; -webkit-text-stroke:1.5px var(--cyan); }
+  .sh p { max-width:380px; color:var(--muted); }
+
+  .trailer { position:relative; aspect-ratio:16/9; border:2px solid var(--cyan); box-shadow:0 0 30px rgba(0,240,255,.25), inset 0 0 40px rgba(0,240,255,.12); background:#050009; overflow:hidden; }
+  .trailer .br { position:absolute; width:30px; height:30px; border:3px solid var(--pink); z-index:3; }
+  .br.tl { top:-10px; left:-10px; border-right:0; border-bottom:0; } .br.tr { top:-10px; right:-10px; border-left:0; border-bottom:0; }
+  .br.bl { bottom:-10px; left:-10px; border-right:0; border-top:0; } .br.brr { bottom:-10px; right:-10px; border-left:0; border-top:0; }
+  .trailer-outer { position:relative; margin:10px; }
+  .trailer svg.poster, .trailer canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .play { position:absolute; left:50%; top:50%; width:110px; height:110px; transform:translate(-50%,-50%); border-radius:50%; border:2px solid var(--fg); background:rgba(10,0,20,.4); backdrop-filter:blur(6px); display:grid; place-items:center; cursor:pointer; z-index:2; animation:glow 1.5s ease-in-out infinite; }
+  .play svg { width:34px; margin-left:6px; }
+  @keyframes glow { 50% { box-shadow:0 0 0 12px rgba(255,46,151,.12), 0 0 60px rgba(255,46,151,.7); } }
+  .tmeta { position:absolute; left:24px; bottom:20px; z-index:2; color:var(--fg); text-shadow:0 0 12px #000; }
+  .trailer.playing .play, .trailer.playing .poster { display:none; }
+  .scan { position:absolute; inset:0; pointer-events:none; z-index:1; background:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px); }
+
+  .cars { display:flex; gap:22px; overflow-x:auto; scroll-snap-type:x mandatory; padding:10px 40px 30px; scrollbar-width:thin; scrollbar-color:var(--pink) transparent; }
+  .car { flex:0 0 360px; scroll-snap-align:start; border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)); padding:26px; position:relative; transition:border-color .3s, transform .4s cubic-bezier(.22,1,.36,1); clip-path:polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px)); }
+  .car:hover { border-color:var(--c); transform:translateY(-6px); }
+  .car .top { display:flex; justify-content:space-between; color:var(--dim); }
+  .car svg { width:100%; height:150px; margin:14px 0 6px; filter:drop-shadow(0 0 10px var(--c)); }
+  .car h3 { font:800 26px/1 Tektur; text-transform:uppercase; transform:skewX(-8deg); color:var(--fg); }
+  .car .cls { color:var(--c); margin-top:8px; }
+  .stat { display:grid; grid-template-columns:70px 1fr 28px; gap:12px; align-items:center; margin-top:14px; color:var(--muted); }
+  .bar { display:grid; grid-template-columns:repeat(10, 1fr); gap:3px; height:12px; }
+  .bar i { background:rgba(255,255,255,.08); transform-origin:left; }
+  .bar i.on { background:var(--c); box-shadow:0 0 8px var(--c); }
+  .bar i { transition:background .1s; }
+
+  .tracks { border-top:1px solid var(--line); }
+  .track { display:grid; grid-template-columns:44px 52px 1.3fr 1fr 60px; gap:20px; align-items:center; padding:16px 10px; border-bottom:1px solid var(--line); transition:background .3s; }
+  .track:hover { background:linear-gradient(90deg, rgba(255,46,151,.1), transparent 80%); }
+  .track .n { color:var(--dim); font-variant-numeric:tabular-nums; }
+  .track .ttl { font:700 19px/1.2 Tektur; text-transform:uppercase; letter-spacing:.02em; }
+  .track .ttl small { display:block; font:500 12px "Chakra Petch"; color:var(--dim); letter-spacing:.14em; margin-top:4px; }
+  .pv { width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:none; cursor:pointer; display:grid; place-items:center; transition:border-color .2s, box-shadow .2s; }
+  .pv:hover, .pv.on { border-color:var(--pink); box-shadow:0 0 16px rgba(255,46,151,.5); }
+  .pv svg { width:14px; height:14px; }
+  .wave { display:flex; align-items:center; gap:3px; height:34px; }
+  .wave i { flex:1; background:linear-gradient(var(--cyan), var(--pink)); border-radius:1px; height:var(--h); opacity:.45; transition:height .2s; }
+  .track:hover .wave i, .track.playing .wave i { opacity:1; animation:wv .6s ease-in-out infinite alternate; animation-delay:var(--d); }
+  @keyframes wv { from { height:12%; } to { height:var(--h2); } }
+  .track .len { color:var(--dim); text-align:right; font-variant-numeric:tabular-nums; }
+
+  .marquee { overflow:hidden; border-block:1px solid var(--line); padding:44px 0; background:rgba(10,0,20,.9); }
+  .mq { display:flex; gap:80px; width:max-content; will-change:transform; }
+  .quote { display:flex; gap:26px; align-items:center; white-space:nowrap; }
+  .quote q { font:700 clamp(24px, 2.6vw, 38px)/1 Tektur; text-transform:uppercase; transform:skewX(-8deg); display:inline-block; quotes:"“" "”"; }
+  .quote .src { color:var(--pink); }
+  .quote .stars { color:var(--sun); letter-spacing:.2em; }
+  .quote::after { content:"✦"; color:var(--cyan); margin-left:54px; }
+
+  .wish { position:relative; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:140px 20px 60px; }
+  .wish h2 { font-size:clamp(56px, 10vw, 150px); background:linear-gradient(180deg, #fdf0ff 30%, #00f0ff 55%, #ff2e97); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 30px rgba(255,46,151,.5)); }
+  .wish p { max-width:520px; color:var(--fg); margin:18px 0 34px; text-shadow:0 2px 16px #0a0014; }
+  .plats { display:flex; gap:28px; margin-top:40px; color:var(--muted); flex-wrap:wrap; justify-content:center; }
+  .plats span { display:flex; gap:8px; align-items:center; }
+  .plats i { width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); }
+  .plats i.soon { background:transparent; border:1px solid var(--dim); box-shadow:none; }
+  form.news { margin-top:44px; display:flex; border:1px solid rgba(0,240,255,.5); background:rgba(10,0,20,.7); backdrop-filter:blur(10px); width:min(480px,100%); }
+  form.news:focus-within { border-color:var(--cyan); box-shadow:0 0 0 2px rgba(0,240,255,.35); }
+  form.news input { flex:1; min-width:0; background:none; border:0; outline:0; color:var(--fg); font:500 15px "Chakra Petch"; padding:0 18px; letter-spacing:.06em; }
+  form.news input::placeholder { color:var(--dim); }
+  form.news button { height:52px; padding:0 22px; border:0; background:var(--cyan); color:#0a0014; font:700 13px "Chakra Petch"; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; }
+  footer { padding:26px 40px; display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; color:var(--dim); border-top:1px solid var(--line); background:rgba(10,0,20,.85); }
+  footer a:hover { color:var(--cyan); }
+  footer .links { display:flex; gap:24px; flex-wrap:wrap; }
+  footer .links a { display:inline-flex; align-items:center; min-height:44px; min-width:44px; }
+  .credit { width:100%; text-align:center; font-size:11px; letter-spacing:.08em; color:rgba(253,240,255,.3); }
+  .keys { position:fixed; right:20px; bottom:50px; z-index:20; color:var(--dim); font-size:10px; }
+  .keys kbd { border:1px solid var(--line); padding:2px 6px; margin-right:6px; font:inherit; }
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity .8s, transform .8s cubic-bezier(.22,1,.36,1); }
+  .reveal.in { opacity:1; transform:none; }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+  @media (max-width:860px) { nav ul { display:none; } .sh { flex-direction:column; align-items:flex-start; } .track { grid-template-columns:44px 1fr 60px; } .track .n, .track .wave { display:none; } .keys { display:none; } }
+  @media (max-width:767px) { .wrap, nav { padding-left:20px; padding-right:20px; } .hud { left:20px; right:20px; } .hud span:last-child { display:none; } .car { flex-basis:290px; } .cars { padding:10px 20px 30px; } section.block { padding:100px 0; } }
+  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } .hero .kicker, .hero .sub, .hero .ctas, .reveal { opacity:1; transform:none; } }
+</style>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="flicker" id="flicker"></div>
+
+<nav id="nav" aria-label="Primary">
+  <a class="logo" href="#top"><svg viewBox="0 0 32 32" fill="none"><path d="M4 22h24" stroke="#00f0ff" stroke-width="2"/><path d="M8 26h16" stroke="#00f0ff" stroke-width="2" opacity=".6"/><path d="M6 18a10 10 0 0 1 20 0" fill="url(#lg)"/><defs><linearGradient id="lg" x1="0" y1="8" x2="0" y2="18" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd319"/><stop offset="1" stop-color="#ff2e97"/></linearGradient></defs></svg>STARLANE</a>
+  <ul class="mono"><li><a href="#trailer">Trailer</a></li><li><a href="#cars">Garage</a></li><li><a href="#ost">Soundtrack</a></li><li><a href="#press">Press</a></li></ul>
+  <div class="nav-end">
+    <button class="pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion" title="Pause motion">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l8 5-8 5z"/></svg>
+    </button>
+    <a class="neon sm" href="#wishlist">Wishlist</a>
+  </div>
+</nav>
+
+<main id="top">
+  <header class="hero">
+    <p class="mono kicker">Starlane Arcade presents</p>
+    <h1>Nightline</h1>
+    <p class="sub">Outrun the dawn. Coming to Steam 2027.</p>
+    <div class="ctas">
+      <a class="neon" href="#wishlist"><svg class="wl" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 20.5S3.5 15.4 3.5 9.3A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 8.5 2.2c0 6.1-8.5 11.2-8.5 11.2z"/></svg>Wishlist on Steam</a>
+      <a class="txt" href="#trailer">▶ Watch the trailer</a>
+    </div>
+    <div class="hud mono"><span>Speed <b id="spd">120</b> mph</span><span>Stage 01 · Neon Causeway</span><span>Scroll to boost ↓</span></div>
+  </header>
+
+  <div class="panel">
+  <section class="block" id="trailer">
+    <div class="wrap">
+      <div class="sh reveal"><div><span class="mono">01 · Reveal trailer</span><h2>Midnight <span>never ends</span></h2></div><p>Ninety seconds of the Neon Causeway, Chrome Canyon and the Last Exit. Captured in-engine, no pre-rendered shots.</p></div>
+      <div class="trailer-outer reveal">
+        <div class="trailer" id="tr">
+          <svg class="poster" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0014"/><stop offset=".55" stop-color="#2d0845"/><stop offset=".62" stop-color="#ff2e97" stop-opacity=".55"/></linearGradient>
+              <linearGradient id="sn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd319"/><stop offset="1" stop-color="#ff2e97"/></linearGradient>
+              <clipPath id="sc"><rect x="0" y="0" width="1600" height="520"/></clipPath>
+              <mask id="bands"><rect width="1600" height="900" fill="#fff"/><g fill="#000"><rect y="400" width="1600" height="6"/><rect y="428" width="1600" height="9"/><rect y="458" width="1600" height="12"/><rect y="490" width="1600" height="16"/></g></mask>
+            </defs>
+            <rect width="1600" height="900" fill="url(#sky)"/>
+            <g clip-path="url(#sc)"><circle cx="800" cy="460" r="250" fill="url(#sn)" mask="url(#bands)"/></g>
+            <path d="M0 520 L180 430 L300 480 L460 380 L620 520 Z M980 520 L1120 400 L1260 470 L1420 360 L1600 450 L1600 520 Z" fill="#12021f" stroke="#ff2e97" stroke-width="2"/>
+            <rect y="520" width="1600" height="380" fill="#0a0014"/>
+            <g stroke="#ff2e97" stroke-width="2" opacity=".85">
+              <path d="M800 520 L-1200 900 M800 520 L-400 900 M800 520 L200 900 M800 520 L600 900 M800 520 L1000 900 M800 520 L1400 900 M800 520 L2000 900 M800 520 L2800 900"/>
+              <path d="M0 530 H1600 M0 546 H1600 M0 570 H1600 M0 605 H1600 M0 655 H1600 M0 725 H1600 M0 820 H1600"/>
+            </g>
+            <path d="M740 900 L790 560 L810 560 L860 900 Z" fill="#00f0ff" opacity=".12"/>
+            <text x="800" y="200" text-anchor="middle" font-family="Tektur" font-weight="900" font-size="120" fill="#fdf0ff" transform="skewX(-8)" style="letter-spacing:6px">NIGHTLINE</text>
+          </svg>
+          <canvas id="tc" aria-label="Trailer playback"></canvas>
+          <div class="scan"></div>
+          <button class="play" id="play" aria-label="Play trailer"><svg viewBox="0 0 24 24" fill="#fdf0ff"><path d="M5 3l16 9-16 9z"/></svg></button>
+          <div class="tmeta mono" id="tmeta">Reveal trailer · 1:30 · in-engine</div>
+          <span class="br tl"></span><span class="br tr"></span><span class="br bl"></span><span class="br brr"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="cars" style="padding-top:60px">
+    <div class="wrap"><div class="sh reveal"><div><span class="mono">02 · The garage</span><h2>Five cars. <span>No brakes.</span></h2></div><p>Every car handles like a different decade. Unlock them by beating the dawn on each stage, or by losing gloriously.</p></div></div>
+    <div class="cars" id="carRow"></div>
+  </section>
+
+  <section class="block" id="ost" style="padding-top:60px">
+    <div class="wrap">
+      <div class="sh reveal"><div><span class="mono">03 · Original soundtrack</span><h2>Eight tracks <span>at 118 bpm</span></h2></div><p>Scored by Vera Kane on analog synths. Previews are muted until you press play, or tap <kbd style="border:1px solid var(--line);padding:1px 6px;font:inherit">M</kbd>.</p></div>
+      <div class="tracks reveal" id="tracks"></div>
+    </div>
+  </section>
+  </div>
+
+  <section class="marquee" id="press" aria-label="Press quotes">
+    <div class="mq" id="mq"></div>
+  </section>
+
+  <section class="wish" id="wishlist">
+    <p class="mono" style="color:var(--cyan);text-shadow:0 0 12px var(--cyan);margin-bottom:14px">Steam page live · Demo in Next Fest</p>
+    <h2>Wishlist now</h2>
+    <p>Every wishlist pushes us up the Steam charts and gets you a launch-day discount. Two people made this. Your click matters.</p>
+    <a class="neon" href="#"><svg class="wl" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 20.5S3.5 15.4 3.5 9.3A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 8.5 2.2c0 6.1-8.5 11.2-8.5 11.2z"/></svg>Wishlist on Steam</a>
+    <div class="plats mono"><span><i></i>Steam · PC</span><span><i></i>Steam Deck verified</span><span><i class="soon"></i>Switch 2 · Later</span><span><i class="soon"></i>PS5 · Later</span></div>
+    <form class="news" onsubmit="event.preventDefault(); this.querySelector('button').textContent='You\'re in'; this.reset();">
+      <label class="sr" for="em">Email</label><input id="em" type="email" required placeholder="Get the demo drop by email" /><button type="submit">Join</button>
+    </form>
+  </section>
+</main>
+
+<footer class="mono">
+  <span>© 2027 Starlane Arcade · Two people, one garage, Austin</span>
+  <span class="links"><a href="#">Press kit</a><a href="#">Discord</a><a href="#">Bluesky</a><a href="#">Contact</a></span>
+  <span class="credit">Template by <a href="https://animatedwebs.com">AnimatedWebs</a> &middot; animatedwebs.com</span>
+</footer>
+<div class="keys mono"><kbd>M</kbd>music preview</div>
+
+<script type="module">
+import * as THREE from "three";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+
+
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const mobile = innerWidth < 768;
+
+/* ---------------- pause control: one flag every moving part reads ---------------- */
+// Starts pressed when the OS asks for reduced motion, so a visitor can still opt in.
+let paused = reduced;
+const onPause = [], pauseBtn = document.getElementById("pause");
+function setPaused(p) {
+  paused = p;
+  pauseBtn.setAttribute("aria-pressed", String(p));
+  document.documentElement.classList.toggle("still", p);
+  onPause.forEach((fn) => fn(p));
+}
+pauseBtn.addEventListener("click", () => setPaused(!paused));
+setPaused(paused);
+
+/* ---------------- DOM content ---------------- */
+const cars = [
+  ["VX-9 Comet", "Class S · Wedge", "#ff2e97", [9, 5, 8], 0],
+  ["Kestrel RS", "Class A · Rally", "#00f0ff", [7, 9, 5], 1],
+  ["Mirage 86", "Class B · Drift", "#ffd319", [6, 8, 7], 2],
+  ["Halcyon GT", "Class A · Tourer", "#b26bff", [8, 7, 6], 3],
+  ["Nova Interceptor", "Class X · Unlocked at dawn", "#ff6a3d", [10, 6, 10], 4],
+];
+const carSVG = (c, v) => {
+  const roofs = ["M92 70 L150 44 L236 42 L286 70", "M96 70 L140 40 L228 38 L272 70", "M104 70 L150 46 L220 44 L262 70", "M90 70 L156 48 L250 46 L300 70", "M88 70 L130 46 L250 44 L300 68"];
+  return `<svg viewBox="0 0 380 150" fill="none" stroke="${c}" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M20 100 L30 78 L92 70 ${roofs[v].slice(roofs[v].indexOf("L"))} L350 78 L362 96 L356 108 L322 108 A28 28 0 0 0 266 108 L128 108 A28 28 0 0 0 72 108 L24 108 Z" fill="${c}" fill-opacity=".08"/>
+    <path d="${roofs[v]}" stroke-opacity=".6"/><path d="M160 70 L162 50 M200 70 L200 44" stroke-opacity=".45"/>
+    <path d="M30 88 H60 M332 86 H356" stroke-width="4"/><path d="M40 96 H330" stroke-opacity=".35"/>
+    <circle cx="100" cy="108" r="22"/><circle cx="100" cy="108" r="9" fill="${c}" fill-opacity=".4"/>
+    <circle cx="294" cy="108" r="22"/><circle cx="294" cy="108" r="9" fill="${c}" fill-opacity=".4"/>
+    <path d="M0 134 H380" stroke-opacity=".3" stroke-dasharray="6 8"/></svg>`;
+};
+document.getElementById("carRow").innerHTML = cars.map(([n, cls, c, st, v], i) => `
+  <article class="car" style="--c:${c}">
+    <div class="top mono"><span>0${i + 1} / 05</span><span>${["1984", "1987", "1986", "1989", "????"][i]}</span></div>
+    ${carSVG(c, v)}
+    <h3>${n}</h3><p class="mono cls">${cls}</p>
+    ${["Speed", "Grip", "Boost"].map((s, j) => `<div class="stat mono"><span>${s}</span><span class="bar" data-v="${st[j]}">${"<i></i>".repeat(10)}</span><span>${st[j]}</span></div>`).join("")}
+  </article>`).join("");
+
+const tracks = [["Neon Causeway", "Stage 01 theme", "3:42", 48], ["Chrome Canyon", "Stage 02 theme", "4:05", 45], ["Last Exit Before Dawn", "Main title", "5:11", 43], ["Tail Light Hymn", "Garage", "2:58", 50], ["Overdrive Heart", "Boss race", "3:33", 52], ["Palm Static", "Stage 03 theme", "4:20", 47], ["Afterburn", "Time trial", "3:01", 55], ["Sunrise Is a Finish Line", "Credits", "6:02", 40]];
+document.getElementById("tracks").innerHTML = tracks.map(([t, s, l], i) => {
+  let bars = ""; for (let b = 0; b < 32; b++) { const h = 20 + Math.abs(Math.sin(b * 0.7 + i * 1.3) * 60 + Math.sin(b * 2.1 + i) * 20); bars += `<i style="--h:${Math.min(h, 95) * 0.6}%;--h2:${Math.min(h + 20, 100)}%;--d:${(-b * 0.07).toFixed(2)}s"></i>`; }
+  return `<div class="track" data-i="${i}"><button class="pv" aria-label="Preview ${t}" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg></button><span class="n mono">0${i + 1}</span><span class="ttl">${t}<small>${s}</small></span><span class="wave">${bars}</span><span class="len mono">${l}</span></div>`;
+}).join("");
+
+const quotes = [["Like driving through a Tangerine Dream album cover at 186 mph.", "Pixel Drift", "★★★★★"], ["The best-feeling handling in an indie racer since forever.", "Retro Rev Weekly", "9 / 10"], ["Two developers made this? The sun alone deserves an award.", "Checkpoint Mag", "Must play"]];
+const qHTML = quotes.map(([q, s, r]) => `<div class="quote"><q>${q}</q><span class="mono src">${s}</span><span class="mono stars">${r}</span></div>`).join("");
+const mq = document.getElementById("mq"); mq.innerHTML = qHTML + qHTML;
+let mqX = 0, mqPause = false;
+mq.addEventListener("pointerenter", () => (mqPause = true)); mq.addEventListener("pointerleave", () => (mqPause = false));
+
+// Reveals are a pure function of scroll position, read from layout offsets that ignore the hidden-state
+// transform, so scrolling back up undoes them exactly. Everything shows once the page reaches its end.
+function revealByScroll(els, enterAt) {
+  let tops = [];
+  const update = () => {
+    const line = scrollY + innerHeight * enterAt, end = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+    els.forEach((el, i) => el.classList.toggle("in", end || tops[i] < line));
+  };
+  const measure = () => {
+    tops = els.map((el) => { let y = 0; for (let n = el; n; n = n.offsetParent) y += n.offsetTop; return y; });
+    update();
+  };
+  addEventListener("scroll", update, { passive: true });
+  addEventListener("resize", measure);
+  addEventListener("load", measure);
+  document.fonts?.ready.then(measure);
+  measure();
+}
+revealByScroll([...document.querySelectorAll(".reveal")], 0.88);
+const bio = new IntersectionObserver((es) => es.forEach((e) => {
+  if (!e.isIntersecting) return; bio.unobserve(e.target);
+  const cards = [...document.querySelectorAll(".car")];
+  cards.forEach((card, ci) => card.querySelectorAll(".bar").forEach((bar, bi) => {
+    const v = +bar.dataset.v, cells = bar.querySelectorAll("i");
+    for (let k = 0; k < v; k++) setTimeout(() => cells[k].classList.add("on"), reduced ? 0 : (ci * 3 + bi) * 80 + (k * 600) / v);
+  }));
+}), { threshold: 0.3 });
+bio.observe(document.getElementById("carRow"));
+
+addEventListener("scroll", () => document.getElementById("nav").classList.toggle("solid", scrollY > innerHeight * 0.6), { passive: true });
+
+/* ---------------- tiny synth previews (only on user click) ---------------- */
+let actx = null, playing = null;
+function stopSynth() { if (playing) { playing.stop(); playing = null; } document.querySelectorAll(".track").forEach((t) => { t.classList.remove("playing"); t.querySelector(".pv").classList.remove("on"); t.querySelector(".pv").setAttribute("aria-pressed", "false"); }); }
+function playSynth(i) {
+  actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+  const root = tracks[i][3], out = actx.createGain(); out.gain.value = 0.06; out.connect(actx.destination);
+  const lp = actx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1400; lp.connect(out);
+  const seq = [0, 7, 12, 15, 12, 7, 3, 7], step = 60 / 118 / 2; let n = 0, alive = true;
+  const tick = () => {
+    if (!alive) return;
+    const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
+    o.type = "sawtooth"; o.frequency.value = 440 * Math.pow(2, (root + seq[n % 8] - 69) / 12);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(1, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + step * 0.9);
+    o.connect(g); g.connect(lp); o.start(t); o.stop(t + step); n++;
+    setTimeout(tick, step * 1000);
+  };
+  tick();
+  return { stop() { alive = false; out.disconnect(); } };
+}
+document.getElementById("tracks").addEventListener("click", (e) => {
+  const b = e.target.closest(".pv"); if (!b) return;
+  const row = b.closest(".track"), i = +row.dataset.i, was = row.classList.contains("playing");
+  stopSynth(); if (was) return;
+  playing = playSynth(i); row.classList.add("playing"); b.classList.add("on"); b.setAttribute("aria-pressed", "true");
+});
+addEventListener("keydown", (e) => {
+  if ((e.key === "m" || e.key === "M") && !/input|textarea/i.test(document.activeElement.tagName)) { if (playing) stopSynth(); else document.querySelector(".track .pv").click(); }
+});
+
+/* ---------------- trailer: in-frame pseudo-3D road ---------------- */
+const tr = document.getElementById("tr"), tc = document.getElementById("tc"), tx = tc.getContext("2d");
+let tPlay = false, tStart = 0;
+document.getElementById("play").addEventListener("click", () => { tr.classList.add("playing"); tPlay = true; tStart = performance.now(); requestAnimationFrame(trailer); });
+function trailer(now) {
+  if (!tPlay) return;
+  const r = tc.getBoundingClientRect(), W = (tc.width = r.width | 0), H = (tc.height = r.height | 0), T = (now - tStart) / 1000;
+  const hz = H * 0.52, g = tx.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, "#0a0014"); g.addColorStop(1, "#3a0a52");
+  tx.fillStyle = g; tx.fillRect(0, 0, W, hz);
+  const sg = tx.createLinearGradient(0, hz - W * 0.16, 0, hz); sg.addColorStop(0, "#ffd319"); sg.addColorStop(1, "#ff2e97");
+  tx.save(); tx.beginPath(); tx.rect(0, 0, W, hz); tx.clip(); tx.fillStyle = sg; tx.beginPath(); tx.arc(W / 2, hz, W * 0.16, 0, Math.PI * 2); tx.fill();
+  tx.fillStyle = "#3a0a52"; for (let k = 0; k < 6; k++) { const y = hz - (k * k * 2 + ((T * 12) % 12)); tx.fillRect(0, y, W, 2 + k * 0.8); } tx.restore();
+  tx.fillStyle = "#0a0014"; tx.fillRect(0, hz, W, H - hz);
+  const curve = Math.sin(T * 0.4) * 0.6;
+  for (let i = 0; i < 60; i++) {
+    const z = i / 60, zz = z * z, y = hz + (H - hz) * zz, cx = W / 2 + curve * W * 0.4 * (1 - z) * (1 - z), rw = W * 0.05 + W * 0.9 * zz;
+    const stripe = Math.floor((1 / (z + 0.05)) * 4 + T * 22) % 2;
+    tx.fillStyle = stripe ? "rgba(255,46,151,.9)" : "rgba(0,240,255,.5)";
+    tx.fillRect(cx - rw / 2 - 4 - rw * 0.04, y, rw * 0.04, (H - hz) / 60 + 1); tx.fillRect(cx + rw / 2 + 4, y, rw * 0.04, (H - hz) / 60 + 1);
+    if (stripe) { tx.fillStyle = "rgba(253,240,255,.8)"; tx.fillRect(cx - rw * 0.008, y, rw * 0.016, (H - hz) / 60 + 1); }
+  }
+  // car
+  const cx = W / 2 + Math.sin(T * 1.3) * W * 0.03, cy = H * 0.86, cw = W * 0.2;
+  tx.fillStyle = "#12021f"; tx.strokeStyle = "#ff2e97"; tx.lineWidth = 3;
+  tx.beginPath(); tx.moveTo(cx - cw / 2, cy); tx.lineTo(cx - cw * 0.42, cy - cw * 0.22); tx.lineTo(cx + cw * 0.42, cy - cw * 0.22); tx.lineTo(cx + cw / 2, cy); tx.closePath(); tx.fill(); tx.stroke();
+  tx.fillStyle = "#ff2e97"; tx.shadowColor = "#ff2e97"; tx.shadowBlur = 24; tx.fillRect(cx - cw * 0.44, cy - cw * 0.12, cw * 0.88, cw * 0.035); tx.shadowBlur = 0;
+  tx.fillStyle = "rgba(253,240,255,.9)"; tx.font = `600 ${Math.max(12, W * 0.012)}px "Chakra Petch"`; tx.fillText(`STAGE 01 · NEON CAUSEWAY · ${(0.3 + T / 90).toFixed(2).slice(2)}:${String(Math.floor(T * 60) % 60).padStart(2, "0")}`, W * 0.03, H * 0.08);
+  document.getElementById("tmeta").textContent = `Reveal trailer · 0:${String(Math.min(Math.floor(T), 90)).padStart(2, "0")} / 1:30`;
+  if (T < 90) requestAnimationFrame(trailer); else { tPlay = false; tr.classList.remove("playing"); }
+}
+
+/* ---------------- WebGL terrain ---------------- */
+const canvas = document.getElementById("gl");
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" }); } catch (e) { canvas.style.background = "linear-gradient(#0a0014, #3a0a52 55%, #0a0014 56%)"; }
+if (renderer) {
+  const DPR = Math.min(devicePixelRatio, mobile ? 1.5 : 1.75);
+  renderer.setPixelRatio(DPR);
+  renderer.setSize(innerWidth, innerHeight, false);
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color("#0a0014");
+  const camera = new THREE.PerspectiveCamera(mobile ? 70 : 58, innerWidth / innerHeight, 0.1, 400);
+
+  const U = { uTime: { value: 0 }, uOff: { value: 0 }, uFogNear: { value: 40 }, uFogFar: { value: 125 } };
+  const noise = `
+    float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
+    float vnoise(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.-2.*f);
+      return mix(mix(hash(i), hash(i+vec2(1,0)), u.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), u.x), u.y); }
+    float fbm(vec2 p){ float v=0., a=.5; for(int i=0;i<4;i++){ v+=a*vnoise(p); p=p*2.03+17.1; a*=.5; } return v; }
+    float heightAt(vec2 xz, float off){
+      float ax = abs(xz.x);
+      float m = smoothstep(6., 18., ax) * (1. + smoothstep(18., 40., ax)*1.6);
+      float n = fbm(vec2(xz.x*.08, (xz.y - off)*.08));
+      return pow(n, 1.6) * m * 9.;
+    }`;
+  const SEG = mobile ? 100 : 200;
+  const tgeo = new THREE.PlaneGeometry(80, 160, SEG, SEG);
+  tgeo.rotateX(-Math.PI / 2);
+  tgeo.translate(0, 0, -70);
+  const terrain = new THREE.Mesh(tgeo, new THREE.ShaderMaterial({
+    uniforms: U,
+    vertexShader: `${noise}
+      uniform float uOff; varying vec3 vW; varying float vDepth; varying float vH;
+      void main(){ vec3 p = position; p.y = heightAt(p.xz, uOff); vH = p.y; vW = p;
+        vec4 mv = modelViewMatrix * vec4(p, 1.); vDepth = -mv.z; gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `
+      uniform float uOff, uFogNear, uFogFar, uTime; varying vec3 vW; varying float vDepth; varying float vH;
+      float gridLine(vec2 g, float w){ vec2 fw = fwidth(g); vec2 d = abs(fract(g - .5) - .5) / max(fw, 1e-4); return 1. - clamp(min(d.x, d.y) / w, 0., 1.); }
+      void main(){
+        vec2 g = vec2(vW.x, vW.z - uOff) / 2.;
+        float line = gridLine(g, 1.2);
+        vec3 pink = vec3(1., .18, .59), cyan = vec3(0., .94, 1.);
+        vec3 lc = mix(pink, cyan, smoothstep(12., 85., vDepth));
+        vec3 fill = mix(vec3(.039,0.,.078), vec3(.09,.0,.16), smoothstep(0., 9., vH));
+        float ax = abs(vW.x);
+        float edge = (1. - smoothstep(0., .09, abs(ax - 5.6))) ;
+        float dash = step(.5, fract((vW.z - uOff) / 6.)) * (1. - smoothstep(0., .07, ax));
+        vec3 col = fill + lc * line * .95 + cyan * edge * 1.1 + vec3(1.,.9,1.) * dash * .7;
+        
+        float fog = smoothstep(uFogNear, uFogFar, vDepth);
+        col = mix(col, vec3(.07, .01, .12), fog);
+        gl_FragColor = vec4(col, 1.);
+      }`,
+  }));
+  scene.add(terrain);
+
+  // sky dome gradient
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(300, 32, 16), new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false,
+    vertexShader: "varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }",
+    fragmentShader: `varying vec3 vP; void main(){ float y = vP.y;
+      vec3 top = vec3(.02,0.,.05), mid = vec3(.12,.02,.22), hor = vec3(.38,.04,.3);
+      vec3 c = mix(hor, mid, smoothstep(-.02, .12, y)); c = mix(c, top, smoothstep(.12, .6, y));
+      c = mix(c, vec3(.07,.01,.12), smoothstep(0., -.05, y));
+      gl_FragColor = vec4(c, 1.); }`,
+  }));
+  scene.add(sky);
+
+  // sun
+  const sun = new THREE.Mesh(new THREE.PlaneGeometry(76, 76), new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, uniforms: U,
+    vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }",
+    fragmentShader: `uniform float uTime; varying vec2 vUv;
+      void main(){
+        vec2 p = (vUv - .5) * 76. / 60.; float r = length(p);
+        float disc = 1. - smoothstep(.495, .5, r);
+        float y = (p.y + .5);
+        float band = step(0., sin(y*40. - uTime*.3*40./14.) + (y - .28)*3.2);
+        vec3 col = mix(vec3(1., .18, .59), vec3(1., .83, .1), smoothstep(.05, .95, y));
+        float glow = exp(-max(r - .5, 0.) * 7.) * .55 * (1. - disc);
+        gl_FragColor = vec4(col * (disc*band*1.25) + vec3(1.,.2,.55)*glow, max(disc*band, glow));
+      }`,
+  }));
+  sun.position.set(0, 13, -150);
+  scene.add(sun);
+
+  // stars
+  const SN = 1200, sp = new Float32Array(SN * 3), ss = new Float32Array(SN);
+  for (let i = 0; i < SN; i++) { const th = Math.random() * Math.PI - Math.PI / 2 - Math.PI / 2, ph = 0.04 + Math.pow(Math.random(), 0.8) * 1.2, R = 250; sp[i * 3] = Math.cos(ph) * Math.cos(th) * R; sp[i * 3 + 1] = Math.sin(ph) * R; sp[i * 3 + 2] = Math.cos(ph) * Math.sin(th) * R; ss[i] = Math.random(); }
+  const sgeo = new THREE.BufferGeometry(); sgeo.setAttribute("position", new THREE.BufferAttribute(sp, 3)); sgeo.setAttribute("aS", new THREE.BufferAttribute(ss, 1));
+  const stars = new THREE.Points(sgeo, new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, uniforms: { uTime: U.uTime, uPR: { value: DPR } },
+    vertexShader: "attribute float aS; uniform float uTime, uPR; varying float vA; void main(){ vA = .35 + .65*abs(sin(uTime*(.5+aS*2.)+aS*40.)); gl_PointSize = (1. + aS*2.2) * uPR; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }",
+    fragmentShader: "varying float vA; void main(){ float d = length(gl_PointCoord-.5); gl_FragColor = vec4(vec3(1.,.92,1.), (1.-smoothstep(.2,.5,d))*vA); }",
+  }));
+  scene.add(stars);
+
+  // post
+  let composer = null, crt = null;
+  composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / (mobile ? 2 : 1), innerHeight / (mobile ? 2 : 1)), mobile ? 0.6 : 0.75, 0.55, 0.32);
+  composer.addPass(bloom);
+  crt = new ShaderPass({
+    uniforms: { tDiffuse: { value: null }, uRes: { value: new THREE.Vector2(innerWidth * DPR, innerHeight * DPR) }, uBarrel: { value: mobile ? 0 : 0.04 }, uBright: { value: 1 }, uPR: { value: DPR } },
+    vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }",
+    fragmentShader: `uniform sampler2D tDiffuse; uniform vec2 uRes; uniform float uBarrel, uBright, uPR; varying vec2 vUv;
+      void main(){
+        vec2 c = vUv - .5; float r2 = dot(c, c);
+        vec2 uv = .5 + c * (1. + uBarrel * r2 * 4.) / (1. + uBarrel);
+        if (uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) { gl_FragColor = vec4(0.,0.,0.,1.); return; }
+        vec2 o = vec2(uPR / uRes.x, 0.);
+        vec3 col = vec3(texture2D(tDiffuse, uv + o).r, texture2D(tDiffuse, uv).g, texture2D(tDiffuse, uv - o).b);
+        float scan = mod(floor(gl_FragCoord.y / uPR), 3.) < 1. ? .88 : 1.;
+        col *= scan * uBright;
+        col *= 1. - r2 * .9;
+        gl_FragColor = vec4(col, 1.);
+      }`,
+  });
+  composer.addPass(crt);
+  // shaders author display-space colors, so no OutputPass color conversion
+
+  // camera state
+  const ptr = { x: 0, tx: 0 };
+  if (!mobile && !reduced) addEventListener("pointermove", (e) => (ptr.tx = (e.clientX / innerWidth - 0.5) * 2));
+  let speed = 12, lastY = scrollY, vel = 0;
+  const wish = document.getElementById("wishlist"), hero = document.querySelector(".hero");
+  const spdEl = document.getElementById("spd");
+
+  const resize = () => {
+    renderer.setSize(innerWidth, innerHeight, false); composer.setSize(innerWidth, innerHeight);
+    camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+    crt.uniforms.uRes.value.set(innerWidth * DPR, innerHeight * DPR);
+  };
+  addEventListener("resize", resize); resize();
+
+  // CRT flicker at random 80-200ms intervals
+  let bright = 1;
+  const flick = () => { bright = 1 + (Math.random() * 2 - 1) * 0.02; setTimeout(flick, 80 + Math.random() * 120); };
+  if (!reduced) flick();
+
+  const clock = new THREE.Clock();
+  let last = 0, off = 0, simT = 0; // simT is the scene clock: it stops while motion is paused
+  function frame() {
+    const t = clock.getElapsedTime(), dt = Math.min(t - last, 0.1); last = t;
+    if (!paused) simT += dt;
+    // scroll velocity -> speed
+    const dy = scrollY - lastY; lastY = scrollY;
+    vel += (Math.abs(dy) / Math.max(dt, 0.016) - vel) * 0.1;
+    const target = Math.min(12 + vel * 0.02, 30);
+    speed += (target - speed) * 0.05;
+    if (!paused) off += speed * dt;
+    U.uOff.value = off; U.uTime.value = simT;
+    spdEl.textContent = Math.round(speed * 10);
+
+    // footer tilt: progress of wishlist section into view
+    const wr = wish.getBoundingClientRect();
+    const fp = Math.min(Math.max(1 - wr.top / innerHeight, 0), 1);
+    ptr.x += (ptr.tx - ptr.x) * 0.05;
+    const sway = Math.sin(simT * (Math.PI * 2 / 7)) * 1.5;
+    const cx = sway + ptr.x * 2;
+    const tilt = fp * THREE.MathUtils.degToRad(20);
+    camera.position.set(cx, 2.4 + fp * 1.2, 6);
+    camera.rotation.set(-0.035 - tilt, 0, 0);
+    camera.rotation.z = THREE.MathUtils.degToRad(-3) * Math.sin(simT * (Math.PI * 2 / 7)) - ptr.x * 0.03;
+    crt.uniforms.uBright.value = paused ? 1 : bright;
+    mqX -= mqPause || paused ? 0 : 40 * dt;
+    const half = mq.scrollWidth / 2; if (-mqX > half) mqX += half;
+    mq.style.transform = `translateX(${mqX}px)`;
+
+    // only render when the terrain is visible (hero or wishlist)
+    const heroVis = hero.getBoundingClientRect().bottom > 0, wishVis = wr.top < innerHeight;
+    canvas.style.visibility = heroVis || wishVis ? "visible" : "hidden";
+    if (heroVis || wishVis) composer.render();
+  }
+  // One loop. It runs every frame while motion plays; while paused it draws one frame per scroll or resize.
+  let raf = 0;
+  function tick() { raf = 0; frame(); if (!paused && !document.hidden) raf = requestAnimationFrame(tick); }
+  const wake = () => { if (!raf && !document.hidden) raf = requestAnimationFrame(tick); };
+  document.addEventListener("visibilitychange", () => { last = clock.getElapsedTime(); wake(); });
+  addEventListener("scroll", wake, { passive: true });
+  addEventListener("resize", wake);
+  onPause.push(() => { last = clock.getElapsedTime(); wake(); });
+  tick();
+}
+</script>
+</body>
+</html>
